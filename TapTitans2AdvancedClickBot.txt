@@ -1,0 +1,683 @@
+﻿//Tap Titans 2 AdvancedClickBot by Tune389 - v0.9.9
+DEVICE: Redmi Note 4 6.0
+SCREEN_SIZE: 480x800 (softkey)
+
+// ----------- Settings --- General
+var #enableChestserton 1
+var #enableClanQuest 1
+var #enableHeroes 1
+var #enableSkills 1
+var #enableAutoprestige 0
+var #runActionsOnStart 1
+var #hatchEggs 1
+var #enableTapping 1
+
+// ----------- Settings --- Mana
+var #fullManaSkill 3
+
+// ----------- Settings --- Prestige
+var #prestigeAfterXMinutes 60
+
+// ----------- Settings --- Heroes
+var #skillIntensity 2
+
+// ----------- Settings --- Boss
+var #startBossWithoutFireBlade 1
+var #checkBossFight 1
+
+// ----------- Settings --- Skills
+//interval in minutes set to 1 or more if you want to press this skill every x minutes
+var #intervalCrit 0
+var #intervalFireBlade 0
+var #intervalMidas 0
+var #intervalShadowClone 0
+var #intervalHeroes 0
+
+// ----------- Settings --- Expert
+//change this if you want to wait more than 5 hours to prestige, this is just an overflow fix
+var #maxHitCount 450000
+
+// ----------- Dec
+var #randomX 0
+var #randomY 0
+var #color1 0
+var #color2 0
+var #loopCount 0
+var #clanQuestLoopCount 0
+var #pressLevelUpLoopCount 0
+var #skillCheckStepper 0
+var #actionStepper 0
+var #levelHeroesStepper 0
+var #bossFightInProgress 0
+var #skillActive 0
+var #statusFresh 0
+var #colorRed 0
+var #colorBlue 0
+var #colorGreen 0
+var #loopDetectionCount 0
+var #result 0
+var #resultActions 0
+var #resultManaPool 0
+var #resultPressSkills 0
+var #resultPrestigeCount 0
+var #resultInterval 0
+
+var #intervalCritCount 0
+var #intervalFireBladeCount 0
+var #intervalMidasCount 0
+var #intervalShadowCloneCount 0
+var #intervalHeroesCount 0
+
+var #hitsRunActions 2503
+var #currentMinute 0
+
+// ----------- Delays
+var #btnDelay 150
+var #hitDelay 40
+var #menuSlideDelay 200
+var #menuPopUpDelay 300
+var #loadingClanQuestDelay 5000
+var #clanQuestDoneDelay 5000
+
+// ----------- Menu Coords
+var #menuY 780
+var #menuStats 15
+var #menuHeroes 120
+var #menuCloseY 455
+var #menuCloseX 466
+
+// ----------- Colors
+var #colorWhite -65793
+var #colorSkillActivated -20993
+var #colorInfoNumber 475629
+var #colorLevelUpAvailable 1338350
+var #colorBlack 397861
+var #colorStatsButton 3826675
+var #colorGray 2695200
+//127 70
+//var #colorItemBossActive 2432264
+
+
+// ----------- MAIN
+:start
+	#loopCount = #loopCount + 1
+
+	#resultActions = #loopCount % #hitsRunActions
+	#resultManaPool = #loopCount % 901
+	#resultCheckBoss = #loopCount % 303
+	#resultPressSkills = #loopCount % 100
+
+	if #loopCount == 1
+		goto :init
+	elseif #loopCount == #resultPrestigeCount and #enableAutoprestige == 1
+		goto :checkPrestige
+	elseif #resultPressSkills == 0
+		goto :pressSkills
+	elseif #resultActions == 0
+		goto :runActions
+	elseif #resultCheckBoss == 0
+		goto :checkBoss
+	elseif #resultManaPool == 0
+		goto :checkMana
+	elseif #loopCount == #maxHitCount
+		#loopCount = 0
+		goto :randomTouch
+	else
+		goto :randomTouch
+	endif
+:end
+
+// ----------- INIT
+:init
+
+	//calculate given minutes to hit amount
+	#resultPrestigeCount = (((#prestigeAfterXMinutes*60*1000)/#hitDelay)/75)*60
+
+	#intervalCritCount = (((#intervalCrit*60*1000)/#hitDelay)/75)*60/100
+	#intervalCritCount = #intervalCritCount * 100
+	#intervalFireBladeCount = (((#intervalFireBlade*60*1000)/#hitDelay)/75)*60/100
+	#intervalFireBladeCount = #intervalFireBladeCount * 100
+	#intervalMidasCount = (((#intervalMidas*60*1000)/#hitDelay)/75)*60/100
+	#intervalMidasCount = #intervalMidasCount * 100
+	#intervalShadowCloneCount = (((#intervalShadowClone*60*1000)/#hitDelay)/75)*60/100
+	#intervalShadowCloneCount = #intervalShadowCloneCount * 100
+	#intervalHeroesCount = (((#intervalHeroes*60*1000)/#hitDelay)/75)*60/100
+	#intervalHeroesCount = #intervalHeroesCount  * 100
+
+	//open stats
+	sleep #btnDelay
+	touchDown 0 #menuStats #menuY
+	sleep #btnDelay
+	touchUp 0
+
+	sleep #menuSlideDelay
+
+	//slide back
+	touchDown 1 280 650
+	sleep 200
+	touchMove 1 280 600
+	sleep 50
+	touchMove 1 280 700
+	sleep 50
+	touchMove 1 280 750
+	sleep 50
+	touchMove 1 280 780
+	touchUp 1
+	sleep 200
+
+	touchDown 0 #menuCloseX #menuCloseY
+	sleep #btnDelay
+	touchUp 0
+	sleep #menuSlideDelay
+
+	if #runActionsOnStart == 1
+		#loopCount = #hitsRunActions
+		goto :runActions
+	endif
+goto :start
+
+:loopDetected
+	toast loop detected - restarting ...
+	#loopCount = 0
+goto :init
+
+:refreshStatus
+	#loopCount = #loopCount - 1
+	getColor #color1 134 84
+	if #color1 == #colorWhite
+		#bossFightInProgress = 1
+	else
+		#bossFightInProgress = 0
+	endif
+goto :start
+
+// ----------- PRESS SKILLS
+:pressSkills
+    #resultInterval = #loopCount % #intervalCritCount
+	if #resultInterval == 0 and #intervalCrit != 0
+		touchPress 0 120 710
+	endif
+	#resultInterval = #loopCount % #intervalFireBladeCount
+	if #resultInterval == 0 and #intervalFireBlade != 0
+		touchPress 0 280 710
+	endif
+	#resultInterval = #loopCount % #intervalMidasCount
+	if #resultInterval == 0 and #intervalMidas != 0
+		touchPress 0 200 710
+	endif
+	#resultInterval = #loopCount % #intervalHeroesCount
+	if #resultInterval == 0 and #intervalHeroes != 0
+		touchPress 0 360 710
+	endif
+	#resultInterval = #loopCount % #intervalShadowCloneCount
+	if #resultInterval == 0 and #intervalShadowClone != 0
+		touchPress 0 430 710
+	endif
+goto :start
+
+// ----------- CHECK MANA
+:checkMana
+	//checking Manabar
+	getColor #color1 208 638
+	if #color1 == #colorWhite
+		//Mana full starting something and dont waste regen time
+		goto :startSkill
+	endif
+goto :start
+
+:startSkill
+	if #fullManaSkill == 2
+		goto :startCrit
+	elseif #fullManaSkill == 3
+		goto :startMidas
+	elseif #fullManaSkill == 5
+		goto :startHeroes
+	elseif #fullManaSkill == 6
+		goto :startShadowClone
+	elseif #fullManaSkill == 4
+		goto :startFireBlade
+	endif
+goto :start
+
+:startCrit
+	touchPress 0 120 710
+goto :start
+
+:startMidas
+	touchPress 0 200 710
+goto :start
+
+:startFireBlade
+	touchPress 0 280 710
+goto :start
+
+:startHeroes
+	touchPress 0 360 710
+goto :start
+
+:startShadowClone
+	touchPress 0 430 710
+goto :start
+
+:runActions
+	//skill available but checking boss fight first
+	if #statusFresh == 0 and #checkBossFight == 1
+		#statusFresh = 1
+		goto :refreshStatus
+	elseif #statusFresh == 1 and #bossFightInProgress == 1 and #checkBossFight == 1
+		toast skipping actions - bossfight in progress
+		#statusFresh = 0
+		touchPress 0 #menuCloseX #menuCloseY
+		goto :start
+	endif
+
+	#actionStepper = #actionStepper + 1
+	if #checkBossFight == 1
+		#statusFresh = 0
+	endif
+
+	if #actionStepper == 1 and #enableClanQuest == 1
+		goto :checkClanQuest
+	elseif #actionStepper == 2
+		goto :levelUp
+	elseif #actionStepper == 3 and #enableSkills == 1
+		goto :checkSkills
+	elseif #actionStepper == 4 and #enableHeroes == 1
+		goto :levelHeroes
+	elseif #actionStepper == 5
+		#statusFresh = 0
+		#actionStepper = 0
+		goto :checkBoss
+	endif
+goto :runActions
+
+// ----------- CHECK PRESTIGE
+:checkPrestige
+	sleep 1000
+
+	//open stats
+	sleep #btnDelay
+	touchDown 0 #menuStats #menuY
+	sleep #btnDelay
+	touchUp 0
+	sleep #btnDelay
+
+	//wait for slide
+	sleep #menuSlideDelay
+
+	//slide down
+	touchDown 1 280 740
+	sleep 200
+	touchMove 1 280 710
+	sleep 50
+	touchMove 1 280 500
+	sleep 50
+	touchMove 1 280 410
+	sleep 50
+	touchMove 1 280 400
+	touchUp 1
+
+	sleep 300
+
+	touchDown 0 400 720
+	touchUp 0
+	sleep #menuPopUpDelay
+
+	getColor #color1 240 270
+
+	#loopCount = 0
+
+	if #color1 == 4858888
+		touchDown 0 240 640
+		sleep #btnDelay
+		touchUp 0
+		sleep #menuPopUpDelay
+		touchDown 0 330 535
+		sleep #btnDelay
+		touchUp 0
+		sleep #menuPopUpDelay
+		sleep 10000
+		goto :start
+	else
+		sleep #btnDelay
+		touchDown 0 #menuCloseX #menuCloseY
+		sleep #btnDelay
+		touchUp 0
+		sleep #menuSlideDelay
+	endif
+goto :start
+
+// ----------- CHECK CLAN QUEST
+:checkClanQuest
+	getRGB #colorRed #colorGreen #colorBlue 75 20
+
+	if #colorBlue == 69
+		sleep #btnDelay
+		touchDown 0 80 30
+		sleep #btnDelay
+		touchUp 0
+		sleep #btnDelay
+		touchDown 0 100 730
+		sleep #btnDelay
+		touchUp 0
+		sleep #loadingClanQuestDelay
+		touchDown 0 310 740
+		sleep #btnDelay
+		touchUp 0
+		sleep #btnDelay
+
+		#clanQuestLoopCount = 0
+
+		goto :clanQuestHit
+	else
+		goto :runActions
+	endif
+
+:clanQuestHit
+	#clanQuestLoopCount = #clanQuestLoopCount + 1
+	if #clanQuestLoopCount > 840
+		goto :clanQuestClose
+	else
+	//hit the boss
+		touchDown 0 180 730
+		touchUp 0
+		sleep #hitDelay
+		goto :clanQuestHit
+	endif
+
+:clanQuestClose
+	getColor #color1 65 795
+	if #color1 == #colorStatsButton
+		goto :runActions
+	else
+		touchDown 0 415 45
+		touchUp 0
+		sleep 200
+		goto :clanQuestHit
+	endif
+
+// ----------- CHECK SKILLS
+:checkSkills
+	#skillCheckStepper = #skillCheckStepper + 1
+
+	if #skillCheckStepper == 1
+		// first skill
+		sleep #btnDelay
+		touchDown 0 466 650
+		sleep #btnDelay
+		touchUp 0
+		goto :checkSkills
+	else
+		if #skillCheckStepper < 6
+			// second skill
+			sleep #btnDelay
+			touchDown 0 466 730
+			sleep #btnDelay
+			touchUp 0
+			sleep #btnDelay
+			goto :checkSkillsSlideDown
+		endif
+	endif
+
+	// second skill
+	sleep #btnDelay
+	touchDown 0 466 730
+	sleep #btnDelay
+	touchUp 0
+
+	//slide back
+	touchDown 1 280 650
+	sleep 200
+	touchMove 1 280 600
+	sleep 50
+	touchMove 1 280 700
+	sleep 50
+	touchMove 1 280 750
+	sleep 50
+	touchMove 1 280 780
+	touchUp 1
+
+	#skillCheckStepper = 0
+	if #enableHeroes == 1
+		goto :runActions
+	endif
+	goto :closeMenu
+
+:checkSkillsSlideDown
+	//slide
+	touchDown 1 280 750
+	sleep 200
+	touchMove 1 280 725
+	sleep 50
+	touchMove 1 280 660
+	sleep 50
+	touchMove 1 280 655
+	sleep 50
+	touchMove 1 280 649
+	sleep 200
+	touchUp 1
+goto :checkSkills
+
+:closeMenu
+	sleep #btnDelay
+	touchDown 0 #menuCloseX #menuCloseY
+	sleep #btnDelay
+	touchUp 0
+	sleep #menuSlideDelay
+goto :runActions
+
+// ----------- LEVEL HEROES
+:levelHeroes
+	//open menu
+	sleep #btnDelay
+	touchDown 0 #menuHeroes #menuY
+	sleep #btnDelay
+	touchUp 0
+	sleep #menuSlideDelay
+	#loopDetectionCount = 0
+	goto :levelHeroesScrollDown
+
+:levelHeroesScrollDown
+	#loopDetectionCount = #loopDetectionCount + 1
+	if #loopDetectionCount == 20
+		goto :loopDetected
+	endif
+
+	getColor #color1 440 760
+	if #color1 == #colorGray
+		#loopDetectionCount = 0
+		goto :levelHeroesPressLevelUp
+	endif
+
+	touchDown 1 280 750
+	touchMove 1 280 745
+	sleep 100
+	touchMove 1 280 740
+	touchMove 1 280 735
+	sleep 50
+	touchMove 1 280 700
+	touchMove 1 280 690
+	sleep 50
+	touchMove 1 280 500
+	touchMove 1 280 450
+	sleep 20
+	touchMove 1 280 420
+	touchMove 1 280 410
+	sleep 50
+	touchMove 1 280 400
+	touchUp 1
+	sleep 200
+	goto :levelHeroesScrollDown
+
+:levelHeroesSlideUpCollection
+
+	#loopDetectionCount = #loopDetectionCount + 1
+	if #loopDetectionCount == 20
+		goto :loopDetected
+	endif
+
+	getColor #color1 475 510
+	if #color1 == #colorGray
+		goto :closeMenu
+	endif
+
+	touchDown 1 280 510
+	sleep 20
+	touchMove 1 280 512
+	touchMove 1 280 514
+	touchMove 1 280 516
+	sleep 20
+	touchMove 1 280 520
+	touchMove 1 280 540
+	sleep 20
+	touchMove 1 280 580
+	touchMove 1 280 600
+	sleep 20
+	touchMove 1 280 630
+	touchMove 1 280 670
+	sleep 20
+	touchMove 1 280 690
+	touchMove 1 280 700
+	sleep 20
+	touchMove 1 280 736
+	touchMove 1 280 738
+	sleep 20
+	touchMove 1 280 740
+	touchMove 1 280 742
+	sleep 200
+	touchUp 1
+	touchPress 1 280 750
+goto :levelHeroesPressLevelUp
+
+:levelHeroesPressLevelUp
+	#pressLevelUpLoopCount = #pressLevelUpLoopCount + 1
+	
+	touchDown 1 466 540
+	sleep 40
+	touchUp 1
+	touchDown 1 466 700
+	sleep 40
+	touchUp 1
+	touchDown 1 466 560
+	sleep 40
+	touchUp 1
+	touchDown 1 466 680
+	sleep 40
+	touchUp 1
+	touchDown 1 466 660
+	sleep 40
+	touchUp 1
+	touchDown 1 466 580
+	sleep 40
+	touchUp 1
+	touchDown 1 466 640
+	sleep 40
+	touchUp 1
+	touchDown 1 466 580
+	sleep 40
+	touchUp 1
+	touchDown 1 466 620
+	sleep 40
+	touchUp 1
+	touchDown 1 466 720
+	sleep 40
+	touchUp 1
+	touchDown 1 466 600
+	sleep 40
+	touchUp 1
+
+	if #pressLevelUpLoopCount < #skillIntensity
+		goto :levelHeroesPressLevelUp
+	endif
+	#pressLevelUpLoopCount = 0
+goto :levelHeroesSlideUpCollection
+
+// ----------- LEVEL UP
+:levelUp
+	//collect gold
+	touchPress 0 30 215
+	//open stats
+	sleep #btnDelay
+	touchDown 0 #menuStats #menuY
+	sleep #btnDelay
+	touchUp 0
+
+	//wait for slide
+	sleep #menuSlideDelay
+
+goto :levelUpLoop
+
+
+:levelUpLoop
+	//lvl up
+	sleep #btnDelay
+	touchDown 0 466 580
+	touchUp 0
+	getColor #color1 460 600
+	if #color1 == #colorLevelUpAvailable
+		goto :levelUpLoop
+	elseif #enableSkills == 1 or #enableHeroes == 1
+		goTo :runActions
+	endif
+goto :closeMenu
+
+:closeMenu
+	//close stats
+	sleep #btnDelay
+	touchPress 0 #menuCloseX #menuCloseY
+	touchPress 0 #menuCloseX #menuCloseY
+	touchPress 0 #menuCloseX #menuCloseY
+	sleep #menuSlideDelay
+goto :runActions
+
+// ----------- CHECK BOSS
+:checkBoss
+
+	getColor #color1 134 84
+
+	if #color1 == #colorWhite
+		goto :start
+	endif
+
+	getColor #color1 268 685
+	getColor #color2 459 29
+
+	if #color1 == #colorWhite and #color2 == #colorBlack
+		//start sword
+		sleep #btnDelay
+		touchDown 0 280 710
+		sleep #btnDelay
+		touchUp 0
+		sleep #btnDelay
+		//start boss
+		touchDown 0 420 40
+		sleep #btnDelay
+		touchUp 0
+		sleep #btnDelay
+	elseif #color2 == #colorBlack and #startBossWithoutFireBlade == 1
+		touchDown 0 420 40
+		sleep #btnDelay
+		touchUp 0
+		sleep #btnDelay
+	elseif #hatchEggs == 1
+		touchPress 0 30 315
+		sleep #btnDelay
+	endif
+		
+goto :start
+
+// ----------- RANDOM ATTACK
+:randomTouch
+	if #enableChestserton == 1
+		rand #randomX 60 415
+		rand #randomY 160 420
+	else
+		rand #randomX 60 415
+		rand #randomY 270 420
+	endif
+	if #enableTapping == 1
+		touchDown 0 #randomX #randomY
+		touchUp 0
+	endif
+	sleep #hitDelay
+goto :start
