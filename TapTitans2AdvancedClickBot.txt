@@ -1,9 +1,9 @@
-﻿//Tap Titans 2 AdvancedClickBot by Tune389 - v1.0.3
+﻿//Tap Titans 2 AdvancedClickBot by Tune389 - v1.0.5
 DEVICE: Redmi Note 4 6.0
 SCREEN_SIZE: 480x800 (softkey)
 
 // ----------- Settings --- General
-var #enableChestserton 1
+var #enableFairies 1
 var #enableClanQuest 1
 var #enableHeroes 1
 var #enableSkills 1
@@ -17,14 +17,16 @@ var #runActionsEveryXMinutes 3
 var #fullManaSkill 3
 
 // ----------- Settings --- Prestige
-var #prestigeAfterXMinutes 60
+var #prestigeAfterXMinutes 45
 
 // ----------- Settings --- Heroes
 var #skillIntensity 2
 
 // ----------- Settings --- Boss
-var #startBossWithoutFireBlade 1
 var #checkBossFight 0
+
+var #startBossSkill 4
+var #startBossSecondarySkill 2
 
 // ----------- Settings --- Skills
 //interval in seconds
@@ -69,6 +71,7 @@ var #loopDetectionCount 0
 var #prestige 0
 var #skillsUnlocked 0
 var #tryWithDelay 0
+var #clanQuestCount = 0
 
 // ----------- Delays
 var #btnDelay 150
@@ -196,6 +199,12 @@ goto :init
 
 // ----------- PRESS SKILLS
 :pressSkills
+	touchDown 0 #menuCloseX #menuCloseY
+	sleep 50
+	touchUp 0
+	sleep #menuSlideDelay
+	#time = #time + 200
+
 	#timeDiff = #secondsTotal - #lastPressCrit
 	if #timeDiff >= #intervalCrit and #intervalCrit > 0
 		#lastPressCrit = #secondsTotal
@@ -345,9 +354,9 @@ goto :start
 
 // ----------- CHECK CLAN QUEST
 :checkClanQuest
-	getRGB #colorRed #colorGreen #colorBlue 75 20
+	getRGB #colorRed #colorGreen #colorBlue 75 22
 
-	if #colorBlue == 66 or #colorBlue == 69
+	if #colorRed < 190
 		sleep #btnDelay
 		#time = #time + #btnDelay
 		touchDown 0 80 30
@@ -754,27 +763,26 @@ goto :runActions
 		goto :pressSkills
 	endif
 
-	getColor #color1 268 685
+	#color1 = 0
+	#color2 = 0
+	
 	getColor #color2 459 29
+		
+	if #startBossSkill == 2
+		getColor #color1 108 685
+	elseif #startBossSkill == 4
+		getColor #color1 268 685
+	elseif #startBossSkill == 3
+		getColor #color1 189 685
+	elseif #startBossSkill == 5
+		getColor #color1 348 685
+	elseif #startBossSkill == 6
+		getColor #color1 428 685
+	endif
 
 	if #color1 == #colorWhite and #color2 == #colorBlack
-		//start sword
-		sleep #btnDelay
-		#time = #time + #btnDelay
-		touchDown 0 280 710
-		sleep #btnDelay
-		#time = #time + #btnDelay
-		touchUp 0
-		sleep #btnDelay
-		#time = #time + #btnDelay
-		//start boss
-		touchDown 0 420 40
-		sleep #btnDelay
-		#time = #time + #btnDelay
-		touchUp 0
-		sleep #btnDelay
-		#time = #time + #btnDelay
-	elseif #color2 == #colorBlack and #startBossWithoutFireBlade == 1
+		goto :startBossWithSkills
+	elseif #color2 == #colorBlack and #startBossSkill == 0
 		touchDown 0 420 40
 		sleep #btnDelay
 		#time = #time + #btnDelay
@@ -789,9 +797,37 @@ goto :runActions
 		
 goto :pressSkills
 
+:startBossWithSkills
+	if #startBossSkill == 2 or #startBossSecondarySkill == 2
+		touchPress 0 120 710
+	endif
+	if #startBossSkill == 4 or #startBossSecondarySkill == 4
+		touchPress 0 280 710
+	endif
+	if #startBossSkill == 3 or #startBossSecondarySkill == 3
+		touchPress 0 200 710
+	endif
+	if #startBossSkill == 5 or #startBossSecondarySkill == 5
+		touchPress 0 360 710
+	endif
+	if #startBossSkill == 6 or #startBossSecondarySkill == 6
+		touchPress 0 430 710
+	endif
+	
+	#time = #time + 400
+	
+	//start boss
+	touchDown 0 420 40
+	sleep #btnDelay
+	#time = #time + #btnDelay
+	touchUp 0
+	sleep #btnDelay
+	#time = #time + #btnDelay
+goto :pressSkills
+
 // ----------- RANDOM ATTACK
 :randomTouch
-	if #enableChestserton == 1
+	if #enableFairies == 1
 		rand #randomX 60 415
 		rand #randomY 160 420
 	else
