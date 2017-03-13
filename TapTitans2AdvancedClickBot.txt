@@ -1,9 +1,10 @@
-﻿//Tap Titans 2 AdvancedClickBot by Tune389 - v1.0.5
+﻿//Tap Titans 2 AdvancedClickBot by Tune389 - v1.0.6
 DEVICE: Redmi Note 4 6.0
 SCREEN_SIZE: 480x800 (softkey)
 
 // ----------- Settings --- General
 var #enableFairies 1
+var #enablePremiumCollect 0
 var #enableClanQuest 1
 var #enableHeroes 1
 var #enableSkills 1
@@ -26,7 +27,7 @@ var #skillIntensity 2
 var #checkBossFight 0
 
 var #startBossSkill 4
-var #startBossSecondarySkill 2
+var #startBossSecondarySkill 0
 
 // ----------- Settings --- Skills
 //interval in seconds
@@ -139,6 +140,13 @@ var #lastPressHeroes 0
 		#minutes = (#time/1000)/60
 	endif
 	
+	if #resultUpdateTime == 0 and #enablePremiumCollect == 1
+		touchDown 0 350 630
+		sleep 100
+		touchUp 0
+		sleep 100
+	endif
+	
 	if #resultUpdateTime == 0 and #timeDiff < #runActionsEveryXMinutes
 		goto :pressSkills
 	endif
@@ -172,6 +180,13 @@ goto :init
 
 // ----------- INIT
 :init
+
+	if #enablePremiumCollect == 1
+		touchDown 0 350 630
+		sleep 100
+		touchUp 0
+		sleep 100
+	endif
 
 	#lastPressCrit = 0
 	#lastPressFireBlade = 0
