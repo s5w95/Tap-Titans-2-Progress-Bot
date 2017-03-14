@@ -373,7 +373,7 @@ goto :start
 :checkClanQuest
 	getRGB #colorRed #colorGreen #colorBlue 75 22
 	
-	if #colorRed < 190 or #clanQuestCount > 0
+	if #colorRed < 200 or #clanQuestCount > 0
 	
 		#clanQuestCount = #clanQuestCount + 1
 	
