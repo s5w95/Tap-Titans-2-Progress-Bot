@@ -6,6 +6,7 @@ SCREEN_SIZE: 480x800 (softkey)
 var #enableFairies 1
 var #enablePremiumCollect 0
 var #enableClanQuest 1
+var #clanQuestRunsPerReadyUp 1
 var #enableHeroes 1
 var #enableSkills 1
 var #enableAutoprestige 0
@@ -72,7 +73,7 @@ var #loopDetectionCount 0
 var #prestige 0
 var #skillsUnlocked 0
 var #tryWithDelay 0
-var #clanQuestCount = 0
+var #clanQuestCount 0
 
 // ----------- Delays
 var #btnDelay 150
@@ -93,6 +94,7 @@ var #menuCloseX 466
 var #colorWhite -65793
 var #colorSkillActivated -20993
 var #colorInfoNumber 475629
+var #colorDia -7970303
 var #colorLevelUpAvailable 1338350
 var #colorBlack 397861
 var #colorStatsButton 3826675
@@ -370,33 +372,48 @@ goto :start
 // ----------- CHECK CLAN QUEST
 :checkClanQuest
 	getRGB #colorRed #colorGreen #colorBlue 75 22
-
-	if #colorRed < 190
+	
+	if #colorRed < 190 or #clanQuestCount == 1
+	
+		#clanQuestCount = #clanQuestCount + 1
+	
 		sleep #btnDelay
-		#time = #time + #btnDelay
 		touchDown 0 80 30
 		sleep #btnDelay
-		#time = #time + #btnDelay
 		touchUp 0
 		sleep #btnDelay
-		#time = #time + #btnDelay
+		
 		touchDown 0 100 730
 		sleep #btnDelay
-		#time = #time + #btnDelay
 		touchUp 0
 		sleep #loadingClanQuestDelay
+				
+		goto :checkClanQuestReady
+	else
+		goto :runActions
+	endif
+	
+:checkClanQuestReady
+	getColor #color1 405 715
+	if #color1 == #colorDia or #clanQuestCount == 1
 		touchDown 0 310 740
 		sleep #btnDelay
-		#time = #time + #btnDelay
 		touchUp 0
 		sleep #btnDelay
-		#time = #time + #btnDelay
+		sleep #btnDelay
+		
+		touchDown 0 325 450
+		sleep #btnDelay
+		touchUp 0
+		sleep #btnDelay
 
 		#clanQuestLoopCount = 0
 
 		goto :clanQuestHit
 	else
-		goto :runActions
+		#clanQuestCloseCheck = #clanQuestCount
+		#clanQuestLoopCount = 841
+		goto :clanQuestClose
 	endif
 
 :clanQuestHit
@@ -415,7 +432,7 @@ goto :start
 :clanQuestClose
 	getColor #color1 65 795
 	if #color1 == #colorStatsButton
-		goto :runActions
+		goto :clanQuestCloseCheck
 	else
 		touchDown 0 415 45
 		touchUp 0
@@ -423,6 +440,15 @@ goto :start
 		#time = #time + #btnDelay
 		goto :clanQuestHit
 	endif
+	
+:clanQuestCloseCheck
+	if #clanQuestCloseCheck == #clanQuestCount
+		#clanQuestCount = 0
+		goto :runActions
+	else
+		goto :checkClanQuest
+	endif
+
 	
 // ----------- CHECK SKILLS
 :checkSkills
