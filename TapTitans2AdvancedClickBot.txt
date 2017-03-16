@@ -378,6 +378,7 @@ goto :start
 :checkClanQuest
 	getRGB #colorRed #colorGreen #colorBlue 75 22
 
+	if #colorRed < 190 and #colorRed > 170
 		sleep #btnDelay
 		#time = #time + #btnDelay
 		touchDown 0 80 30
