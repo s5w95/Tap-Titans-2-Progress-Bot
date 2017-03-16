@@ -6,7 +6,6 @@ SCREEN_SIZE: 480x800 (softkey)
 var #enableFairies 1
 var #enablePremiumCollect 0
 var #enableClanQuest 1
-var #clanQuestRunsPerReadyUp 1
 var #enableHeroes 1
 var #enableSkills 1
 var #enableAutoprestige 0
@@ -14,6 +13,12 @@ var #runActionsOnStart 1
 var #hatchEggs 1
 var #enableTapping 1
 var #runActionsEveryXMinutes 3
+
+// ----------- Settings --- Action Order
+var #orderCheckClanQuest 1
+var #orderLevelHeroes 2
+var #orderLevelMaster 3
+var #orderLevelSkills 4
 
 // ----------- Settings --- Mana
 var #fullManaSkill 3
@@ -293,14 +298,14 @@ goto :start
 		goto :pressSkills
 	endif
 
-	if #actionStepper == 1 and #enableClanQuest == 1
+	if #actionStepper == #orderCheckClanQuest and #enableClanQuest == 1
 		goto :checkClanQuest
-	elseif #actionStepper == 2
+	elseif #actionStepper == #orderLevelMaster
 		goto :levelUp
-	elseif #actionStepper == 3 and #enableSkills == 1 and  #skillsUnlocked < 5
+	elseif #actionStepper == #orderLevelSkills and #enableSkills == 1 and  #skillsUnlocked < 5
 		#skillsUnlocked = 0
 		goto :checkSkills
-	elseif #actionStepper == 4 and #enableHeroes == 1
+	elseif #actionStepper == #orderLevelHeroes and #enableHeroes == 1
 		goto :levelHeroes
 	elseif #actionStepper >= 5
 		#actionStepper = 0
@@ -372,48 +377,32 @@ goto :start
 // ----------- CHECK CLAN QUEST
 :checkClanQuest
 	getRGB #colorRed #colorGreen #colorBlue 75 22
-	
-	if #colorRed < 190 or #clanQuestCount > 0
-	
-		#clanQuestCount = #clanQuestCount + 1
-	
+
 		sleep #btnDelay
+		#time = #time + #btnDelay
 		touchDown 0 80 30
 		sleep #btnDelay
+		#time = #time + #btnDelay
 		touchUp 0
 		sleep #btnDelay
-		
+		#time = #time + #btnDelay
 		touchDown 0 100 730
 		sleep #btnDelay
+		#time = #time + #btnDelay
 		touchUp 0
 		sleep #loadingClanQuestDelay
-				
-		goto :checkClanQuestReady
-	else
-		goto :runActions
-	endif
-	
-:checkClanQuestReady
-	getColor #color1 405 715
-	if #color1 == #colorDia or #clanQuestCount == 1
 		touchDown 0 310 740
 		sleep #btnDelay
+		#time = #time + #btnDelay
 		touchUp 0
 		sleep #btnDelay
-		sleep #btnDelay
-		
-		touchDown 0 325 450
-		sleep #btnDelay
-		touchUp 0
-		sleep #btnDelay
+		#time = #time + #btnDelay
 
 		#clanQuestLoopCount = 0
 
 		goto :clanQuestHit
 	else
-		#clanQuestCloseCheck = #clanQuestCount
-		#clanQuestLoopCount = 841
-		goto :clanQuestClose
+		goto :runActions
 	endif
 
 :clanQuestHit
@@ -432,21 +421,13 @@ goto :start
 :clanQuestClose
 	getColor #color1 65 795
 	if #color1 == #colorStatsButton
-		goto :clanQuestCloseCheck
+		goto :runActions
 	else
 		touchDown 0 415 45
 		touchUp 0
 		sleep 200
 		#time = #time + #btnDelay
 		goto :clanQuestHit
-	endif
-	
-:clanQuestCloseCheck
-	if #clanQuestCloseCheck == #clanQuestCount
-		#clanQuestCount = 0
-		goto :runActions
-	else
-		goto :checkClanQuest
 	endif
 
 	
