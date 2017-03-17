@@ -27,7 +27,7 @@ var #fullManaSkill 3
 var #prestigeAfterXMinutes 45
 
 // ----------- Settings --- Heroes
-var #skillIntensity 2
+var #skillIntensity 1
 
 // ----------- Settings --- Boss
 var #checkBossFight 0
@@ -378,7 +378,7 @@ goto :start
 :checkClanQuest
 	getRGB #colorRed #colorGreen #colorBlue 75 22
 
-	if #colorRed < 190 and #colorRed > 170
+	if #colorRed < 190 and #colorRed > 120
 		sleep #btnDelay
 		#time = #time + #btnDelay
 		touchDown 0 80 30
@@ -677,37 +677,34 @@ goto :levelHeroesPressLevelUp
 :levelHeroesPressLevelUp
 	#pressLevelUpLoopCount = #pressLevelUpLoopCount + 1
 	
-	touchDown 1 466 540
+	touchDown 1 466 700 720
 	sleep 40
 	touchUp 1
-	touchDown 1 466 700
+	touchDown 1 466 560 700
 	sleep 40
 	touchUp 1
-	touchDown 1 466 560
+	touchDown 1 466 680 680
 	sleep 40
 	touchUp 1
-	touchDown 1 466 680
+	touchDown 1 466 660 660
 	sleep 40
 	touchUp 1
-	touchDown 1 466 660
+	touchDown 1 466 580 640
 	sleep 40
 	touchUp 1
-	touchDown 1 466 580
+	touchDown 1 466 640 620
 	sleep 40
 	touchUp 1
-	touchDown 1 466 640
+	touchDown 1 466 580 600
 	sleep 40
 	touchUp 1
-	touchDown 1 466 580
+	touchDown 1 466 620 580
 	sleep 40
 	touchUp 1
-	touchDown 1 466 620
+	touchDown 1 466 540 560
 	sleep 40
 	touchUp 1
-	touchDown 1 466 720
-	sleep 40
-	touchUp 1
-	touchDown 1 466 600
+	touchDown 1 466 600 540
 	sleep 40
 	touchUp 1
 
