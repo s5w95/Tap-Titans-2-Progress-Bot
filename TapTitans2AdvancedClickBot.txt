@@ -1,4 +1,4 @@
-﻿//Tap Titans 2 AdvancedClickBot by Tune389 - v1.0.6
+﻿//Tap Titans 2 AdvancedClickBot by Tune389 - v1.0.7
 DEVICE: Redmi Note 4 6.0
 SCREEN_SIZE: 480x800 (softkey)
 
@@ -78,6 +78,7 @@ var #loopDetectionCount 0
 var #prestige 0
 var #skillsUnlocked 0
 var #tryWithDelay 0
+var #checkRunning 0
 var #clanQuestCount 0
 
 // ----------- Delays
@@ -185,8 +186,16 @@ var #lastPressHeroes 0
 	#minutes = 0
 goto :init
 
+
 // ----------- INIT
 :init
+
+	CheckApp #checkRunning com.gamehivecorp.taptitans2
+	if #checkRunning == 0
+		RunApp com.gamehivecorp.taptitans2
+		WaitApp com.gamehivecorp.taptitans2
+		sleep 10000
+	endif
 
 	if #enablePremiumCollect == 1
 		touchDown 0 350 630
@@ -307,9 +316,20 @@ goto :start
 		goto :checkSkills
 	elseif #actionStepper == #orderLevelHeroes and #enableHeroes == 1
 		goto :levelHeroes
-	elseif #actionStepper >= 5
+	elseif #actionStepper == 5	
+		goto :checkGameRunningState
+	elseif #actionStepper == 6
 		#actionStepper = 0
 		goto :checkBoss
+	endif
+goto :runActions
+
+// ----------- CHECK PRESTIGE
+:checkGameRunningState
+	CheckApp #checkRunning com.gamehivecorp.taptitans2
+	if #checkRunning == 0
+		RunApp com.gamehivecorp.taptitans2
+		WaitApp com.gamehivecorp.taptitans2
 	endif
 goto :runActions
 
