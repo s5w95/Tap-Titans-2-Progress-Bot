@@ -880,7 +880,7 @@ goto :pressSkills
 	endif
 	
 	//equipment stacking
-	if #randomX > 255 and #randomX < 440 and #randomY > 280
+	if #randomX > 280 and #randomX < 430 and #randomY > 300
 		goto :randomTouch
 	endif
 	
