@@ -1,42 +1,35 @@
-﻿//Tap Titans 2 AdvancedClickBot by Tune389 - v1.0.7
-DEVICE: Redmi Note 4 6.0
-SCREEN_SIZE: 480x800 (softkey)
+﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.0.7 ]
 
-// ----------- Settings --- General
+SCREEN_SIZE: 480x800
+
+// ----------- Settings
 var #enableFairies 1
 var #enablePremiumCollect 0
-var #enableClanQuest 1
-var #enableHeroes 1
-var #enableSkills 1
-var #enableAutoprestige 0
-var #runActionsOnStart 1
 var #hatchEggs 1
 var #enableTapping 1
-var #runActionsEveryXMinutes 3
 
-// ----------- Settings --- Action Order
+// ----------- Actions ----------- [ General ]
+var #runActionsOnStart 1
+var #runActionsEveryXMinutes 3
+var #fullManaSkill 3
+
+//Action Order
 var #orderCheckClanQuest 1
 var #orderLevelHeroes 2
 var #orderLevelMaster 3
 var #orderLevelSkills 4
 
-// ----------- Settings --- Mana
-var #fullManaSkill 3
+// ----------- Actions ----------- [ ClanQuest ]
+var #enableClanQuest 1
 
-// ----------- Settings --- Prestige
-var #prestigeAfterXMinutes 45
-
-// ----------- Settings --- Heroes
+// ----------- Actions ----------- [ Heroes ]
+var #enableHeroes 1
 var #skillIntensity 1
 
-// ----------- Settings --- Boss
-var #checkBossFight 0
+// ----------- Actions ----------- [ Skills ]
+var #enableSkills 1
+var #stopMasterAfterSkillsUnlocked 1
 
-var #startBossSkill 0
-var #startBossSecondarySkill 0
-
-// ----------- Settings --- Skills
-//interval in seconds
 var #intervalCrit 0
 var #intervalFireBlade 0
 var #intervalMidas 0
@@ -48,7 +41,21 @@ var #justUnlockSkills 1
 //run skill check after prestige or now
 var #startSkillCheckNow 1
 
-// ----------- Settings --- Expert
+// ----------- Actions ----------- [ Boss ]
+var #checkBossFight 0
+var #startBossSkill 0
+var #startBossSecondarySkill 0
+
+// ----------- Actions ----------- [ Prestige ]
+var #enableAutoprestige 0
+var #prestigeAfterXMinutes 45
+
+
+
+
+
+
+// ----------- Developer / Expert
 var #maxHitCount 9999999
 
 //show current script time
@@ -129,7 +136,7 @@ var #lastPressHeroes 0
 	#loopCount = #loopCount + 1
 
 	#resultManaPool = #loopCount % 901
-	#resultCheckBoss = #loopCount % 303
+	#resultCheckBoss = #loopCount % 53
 	//update every 7-8 seconds
 	#resultUpdateTime = #loopCount % 80
 
@@ -230,6 +237,15 @@ goto :init
 
 // ----------- PRESS SKILLS
 :pressSkills
+
+	// check running state
+	CheckApp #checkRunning com.gamehivecorp.taptitans2
+	if #checkRunning == 0
+		RunApp com.gamehivecorp.taptitans2
+		sleep 10000
+		goto :init
+	endif
+
 	touchDown 0 #menuCloseX #menuCloseY
 	sleep 50
 	touchUp 0
@@ -309,27 +325,18 @@ goto :start
 
 	if #actionStepper == #orderCheckClanQuest and #enableClanQuest == 1
 		goto :checkClanQuest
-	elseif #actionStepper == #orderLevelMaster
+	elseif #actionStepper == #orderLevelMaster and #skillsUnlocked < 5 and #stopMasterAfterSkillsUnlocked == 1
+		goto :levelUp
+	elseif #actionStepper == #orderLevelMaster and #stopMasterAfterSkillsUnlocked == 0
 		goto :levelUp
 	elseif #actionStepper == #orderLevelSkills and #enableSkills == 1 and  #skillsUnlocked < 5
 		#skillsUnlocked = 0
 		goto :checkSkills
 	elseif #actionStepper == #orderLevelHeroes and #enableHeroes == 1
 		goto :levelHeroes
-	elseif #actionStepper == 5	
-		goto :checkGameRunningState
-	elseif #actionStepper == 6
+	elseif #actionStepper == 5
 		#actionStepper = 0
 		goto :checkBoss
-	endif
-goto :runActions
-
-// ----------- CHECK PRESTIGE
-:checkGameRunningState
-	CheckApp #checkRunning com.gamehivecorp.taptitans2
-	if #checkRunning == 0
-		RunApp com.gamehivecorp.taptitans2
-		WaitApp com.gamehivecorp.taptitans2
 	endif
 goto :runActions
 
@@ -869,10 +876,10 @@ goto :pressSkills
 :randomTouch
 	if #enableFairies == 1
 		rand #randomX 60 415
-		rand #randomY 160 420
+		rand #randomY 160 350
 	else
 		rand #randomX 60 415
-		rand #randomY 270 420
+		rand #randomY 270 350
 	endif
 	if #enableTapping == 1
 		touchDown 0 #randomX #randomY
