@@ -879,7 +879,8 @@ goto :pressSkills
 		rand #randomY 270 420
 	endif
 	
-	if #randomX > 270 and #randomX < 415 and #randomY < 300
+	//equipment stacking
+	if #randomX > 255 and #randomX < 440 and #randomY > 280
 		goto :randomTouch
 	endif
 	
