@@ -34,6 +34,7 @@ var #intervalCrit 0
 var #intervalFireBlade 0
 var #intervalMidas 0
 var #intervalHeroes 0
+var #intervalShadowClone 0
 
 //just level each skill once
 var #justUnlockSkills 1
@@ -49,10 +50,6 @@ var #startBossSecondarySkill 0
 // ----------- Actions ----------- [ Prestige ]
 var #enableAutoprestige 0
 var #prestigeAfterXMinutes 45
-
-
-
-
 
 
 // ----------- Developer / Expert
@@ -876,11 +873,16 @@ goto :pressSkills
 :randomTouch
 	if #enableFairies == 1
 		rand #randomX 60 415
-		rand #randomY 160 350
+		rand #randomY 160 420
 	else
 		rand #randomX 60 415
-		rand #randomY 270 350
+		rand #randomY 270 420
 	endif
+	
+	if #randomX > 270 and #randomX < 415 and #randomY < 300
+		goto :randomTouch
+	endif
+	
 	if #enableTapping == 1
 		touchDown 0 #randomX #randomY
 		touchUp 0
