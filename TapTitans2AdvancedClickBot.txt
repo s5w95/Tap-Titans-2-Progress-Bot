@@ -388,7 +388,7 @@ goto :runActions
 		touchDown 0 330 535
 		sleep #btnDelay
 		touchUp 0
-		sleep 5000
+		sleep 9000
 		goto :afterPrestige
 	else
 		touchPress 470 450
@@ -479,7 +479,7 @@ goto :runActions
 	//hit the boss
 		touchDown 0 180 730
 		touchUp 0
-		sleep #hitDelay
+		sleep 25
 		#time = #time + #btnDelay
 		goto :clanQuestHit
 	endif
