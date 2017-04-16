@@ -1,4 +1,4 @@
-﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.0.7 ]
+﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.1.0 ]
 
 SCREEN_SIZE: 480x800
 
@@ -21,6 +21,7 @@ var #orderLevelSkills 4
 
 // ----------- Actions ----------- [ ClanQuest ]
 var #enableClanQuest 1
+var #clanQuestRunsPerReadyUp 1
 
 // ----------- Actions ----------- [ Heroes ]
 var #enableHeroes 1
@@ -84,6 +85,7 @@ var #skillsUnlocked 0
 var #tryWithDelay 0
 var #checkRunning 0
 var #clanQuestCount 0
+var #calc1 0
 
 // ----------- Delays
 var #btnDelay 150
@@ -401,35 +403,74 @@ goto :start
 // ----------- CHECK CLAN QUEST
 :checkClanQuest
 	getRGB #colorRed #colorGreen #colorBlue 75 22
-
+	
 	if #colorRed < 190 and #colorRed > 120
-		sleep #btnDelay
-		#time = #time + #btnDelay
-		touchDown 0 80 30
-		sleep #btnDelay
-		#time = #time + #btnDelay
-		touchUp 0
-		sleep #btnDelay
-		#time = #time + #btnDelay
-		touchDown 0 100 730
-		sleep #btnDelay
-		#time = #time + #btnDelay
-		touchUp 0
-		sleep #loadingClanQuestDelay
-		touchDown 0 310 740
-		sleep #btnDelay
-		#time = #time + #btnDelay
-		touchUp 0
-		sleep #btnDelay
-		#time = #time + #btnDelay
-
-		#clanQuestLoopCount = 0
-
-		goto :clanQuestHit
-	else
-		goto :runActions
+		goto :checkClanQuestReady
 	endif
 
+	#calc1 = #clanQuestRunsPerReadyUp + 1
+	
+	if #clanQuestCount > 0 and #clanQuestCount < #calc1		
+		goto :checkClanQuestReady
+	endif
+goto :runActions
+	
+:checkClanQuestReady
+
+	//add quest
+	#clanQuestCount = #clanQuestCount + 1
+
+	//open menu
+	sleep #btnDelay
+	touchDown 0 80 30
+	sleep #btnDelay
+	touchUp 0
+	sleep #btnDelay
+	
+	//touch clan icon bottom
+	touchDown 0 100 730
+	sleep #btnDelay
+	touchUp 0
+	sleep #loadingClanQuestDelay
+
+	//button color 
+	getColor #color1 405 715
+	
+	#clanQuestLoopCount = 0
+	
+	//addidional quest
+	if #color1 == #colorDia and #clanQuestCount > 1
+		touchDown 0 310 740
+		sleep #btnDelay
+		touchUp 0
+		sleep #btnDelay
+		sleep #btnDelay
+		goto :clanQuestCheckDias
+	elseif #clanQuestCount > 1
+		#clanQuestCount = #clanQuestRunsPerReadyUp
+		goto :clanQuestClose
+	else
+		touchDown 0 310 740
+		sleep #btnDelay
+		touchUp 0
+		sleep #btnDelay
+	endif
+
+	goto :clanQuestHit
+
+:clanQuestCheckDias
+	getColor #color1 40 215
+	if #color1 == -7775689
+		#clanQuestCount = #clanQuestRunsPerReadyUp
+		goto :clanQuestClose
+	else
+		touchDown 0 325 450
+		sleep #btnDelay
+		touchUp 0
+		sleep #btnDelay
+		goto :clanQuestHit
+	endif
+	
 :clanQuestHit
 	#clanQuestLoopCount = #clanQuestLoopCount + 1
 	if #clanQuestLoopCount > 840
@@ -446,14 +487,26 @@ goto :start
 :clanQuestClose
 	getColor #color1 65 795
 	if #color1 == #colorStatsButton
-		goto :runActions
+		goto :clanQuestCloseCheck
 	else
 		touchDown 0 415 45
 		touchUp 0
 		sleep 200
+		touchDown 0 420 210
+		touchUp 0
+		sleep 200
 		#time = #time + #btnDelay
-		goto :clanQuestHit
+		goto :clanQuestClose
 	endif
+	
+:clanQuestCloseCheck
+	if #clanQuestRunsPerReadyUp == #clanQuestCount
+		#clanQuestCount = 0
+		goto :runActions
+	else
+		goto :checkClanQuest
+	endif
+
 
 	
 // ----------- CHECK SKILLS
