@@ -473,7 +473,7 @@ goto :runActions
 	
 :clanQuestHit
 	#clanQuestLoopCount = #clanQuestLoopCount + 1
-	if #clanQuestLoopCount > 840
+	if #clanQuestLoopCount > 1400
 		goto :clanQuestClose
 	else
 	//hit the boss
