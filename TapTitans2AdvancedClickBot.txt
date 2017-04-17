@@ -91,8 +91,7 @@ var #btnDelay 150
 var #hitDelay 40
 var #menuSlideDelay 200
 var #menuPopUpDelay 500
-var #loadingClanQuestDelay 5000
-var #clanQuestDoneDelay 5000
+var #loadingClanQuestDelay 2000
 
 // ----------- Menu Coords
 var #menuY 780
@@ -140,7 +139,7 @@ var #resultClanQUest 0
 
 	#resultManaPool = #loopCount % 901
 	#resultCheckBoss = #loopCount % 302
-	#resultClanQUest = #loopCount % 145
+	#resultClanQUest = #loopCount % 101
 	#resultUpdateTime = #loopCount % 80
 
 	#timeDiff = #minutes - #timeLastActionRun
