@@ -174,10 +174,8 @@ var #resultClanQUest 0
 	endif
 		
 	if #loopCount == 1
-		toast checking
 		goto :checkClanQuest
 	elseif #loopCount == 2
-		toast init
 		goto :init
 	elseif #minutes >= #prestigeAfterXMinutes and #enableAutoprestige == 1
 		goto :checkPrestige
@@ -325,7 +323,7 @@ goto :start
 	#actionStepper = #actionStepper + 1
 	
 	if #checkBossFight == 1
-		getColor #color1 134 84
+		getColor #color1 139 85
 	endif
 	
 	if #checkBossFight == 1 and #color1 == #colorWhite
@@ -345,7 +343,7 @@ goto :start
 		goto :levelHeroes
 	elseif #actionStepper == 5
 		#actionStepper = 0
-		goto :checkBoss
+		goto :checkClanQuest
 	endif
 goto :runActions
 
@@ -864,7 +862,7 @@ goto :runActions
 // ----------- CHECK BOSS
 :checkBoss
 
-	getColor #color1 134 84
+	getColor #color1 139 85
 
 	if #color1 == #colorWhite
 		goto :pressSkills
