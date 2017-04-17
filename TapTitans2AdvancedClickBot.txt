@@ -14,10 +14,9 @@ var #runActionsEveryXMinutes 3
 var #fullManaSkill 3
 
 //Action Order
-var #orderCheckClanQuest 1
-var #orderLevelHeroes 2
-var #orderLevelMaster 3
-var #orderLevelSkills 4
+var #orderLevelHeroes 1
+var #orderLevelMaster 2
+var #orderLevelSkills 3
 
 // ----------- Actions ----------- [ ClanQuest ]
 var #enableClanQuest 1
@@ -129,20 +128,29 @@ var #lastPressMidas 0
 var #lastPressShadowClone 0
 var #lastPressHeroes 0
 
+var #resultManaPool 0
+var #resultCheckBoss 0
+var #resultUpdateTime 0
+var #resultClanQUest 0
+
 
 // ----------- MAIN
 :start
 	#loopCount = #loopCount + 1
 
 	#resultManaPool = #loopCount % 901
-	#resultCheckBoss = #loopCount % 53
-	//update every 7-8 seconds
+	#resultCheckBoss = #loopCount % 302
+	#resultClanQUest = #loopCount % 145
 	#resultUpdateTime = #loopCount % 80
 
 	#timeDiff = #minutes - #timeLastActionRun
 	
 	//add general execution delays
 	#time = #time + #timeScaleAddition
+	
+	if #resultClanQUest  ==  0
+		goto :checkClanQuest
+	endif
 	
 	if #showCurrentTime == 1 and #resultUpdateTime == 0
 		toast #minutes:#seconds
@@ -166,6 +174,10 @@ var #lastPressHeroes 0
 	endif
 		
 	if #loopCount == 1
+		toast checking
+		goto :checkClanQuest
+	elseif #loopCount == 2
+		toast init
 		goto :init
 	elseif #minutes >= #prestigeAfterXMinutes and #enableAutoprestige == 1
 		goto :checkPrestige
@@ -322,9 +334,7 @@ goto :start
 		goto :pressSkills
 	endif
 
-	if #actionStepper == #orderCheckClanQuest and #enableClanQuest == 1
-		goto :checkClanQuest
-	elseif #actionStepper == #orderLevelMaster and #skillsUnlocked < 5 and #stopMasterAfterSkillsUnlocked == 1
+	if #actionStepper == #orderLevelMaster and #skillsUnlocked < 5 and #stopMasterAfterSkillsUnlocked == 1
 		goto :levelUp
 	elseif #actionStepper == #orderLevelMaster and #stopMasterAfterSkillsUnlocked == 0
 		goto :levelUp
@@ -413,7 +423,7 @@ goto :start
 	if #clanQuestCount > 0 and #clanQuestCount < #calc1		
 		goto :checkClanQuestReady
 	endif
-goto :runActions
+goto :start
 	
 :checkClanQuestReady
 
@@ -502,7 +512,7 @@ goto :runActions
 :clanQuestCloseCheck
 	if #clanQuestRunsPerReadyUp == #clanQuestCount
 		#clanQuestCount = 0
-		goto :runActions
+		goto :start
 	else
 		goto :checkClanQuest
 	endif
