@@ -91,7 +91,7 @@ var #btnDelay 150
 var #hitDelay 40
 var #menuSlideDelay 200
 var #menuPopUpDelay 500
-var #loadingClanQuestDelay 2000
+var #loadingClanQuestDelay 1500
 
 // ----------- Menu Coords
 var #menuY 780
@@ -441,29 +441,21 @@ goto :start
 	sleep #loadingClanQuestDelay
 
 	//button color 
-	getColor #color1 405 715
+	getColor #color1 175 335
 	
 	#clanQuestLoopCount = 0
 	
 	//addidional quest
-	if #color1 == #colorDia and #clanQuestCount > 1
+	if #color1 == 2055160
 		touchDown 0 310 740
 		sleep #btnDelay
 		touchUp 0
-		sleep #btnDelay
-		sleep #btnDelay
+		sleep #menuPopUpDelay
 		goto :clanQuestCheckDias
-	elseif #clanQuestCount > 1
-		#clanQuestCount = #clanQuestRunsPerReadyUp
-		goto :clanQuestClose
-	else
-		touchDown 0 310 740
-		sleep #btnDelay
-		touchUp 0
-		sleep #btnDelay
 	endif
-
-	goto :clanQuestHit
+	
+	#clanQuestCount = #clanQuestRunsPerReadyUp
+goto :clanQuestClose
 
 :clanQuestCheckDias
 	getColor #color1 40 215
@@ -480,7 +472,7 @@ goto :start
 	
 :clanQuestHit
 	#clanQuestLoopCount = #clanQuestLoopCount + 1
-	if #clanQuestLoopCount > 1400
+	if #clanQuestLoopCount > 1200
 		goto :clanQuestClose
 	else
 	//hit the boss
