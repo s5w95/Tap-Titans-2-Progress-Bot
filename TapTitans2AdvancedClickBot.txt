@@ -91,7 +91,7 @@ var #btnDelay 150
 var #hitDelay 40
 var #menuSlideDelay 200
 var #menuPopUpDelay 500
-var #loadingClanQuestDelay 1500
+var #loadingClanQuestDelay 3000
 
 // ----------- Menu Coords
 var #menuY 780
