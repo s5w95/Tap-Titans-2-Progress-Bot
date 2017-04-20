@@ -1,4 +1,4 @@
-﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.1.0 ]
+﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.1.1 - dev 1 ]
 
 SCREEN_SIZE: 480x800
 
@@ -452,9 +452,10 @@ goto :start
 		touchUp 0
 		sleep #menuPopUpDelay
 		goto :clanQuestCheckDias
+	elseif #color1 == 0
+		#clanQuestCount = #clanQuestRunsPerReadyUp
 	endif
 	
-	#clanQuestCount = #clanQuestRunsPerReadyUp
 goto :clanQuestClose
 
 :clanQuestCheckDias
