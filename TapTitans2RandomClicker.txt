@@ -1,0 +1,37 @@
+// -  Tap Titans 2 RandomClicker by Tune389 [ v1 ]
+
+SCREEN_SIZE: 480x800
+
+var #delay 30
+var #equipmentStacking 1
+
+var #startX 60
+var #endX 415
+
+var #startY 270
+var #endY 420
+
+// ----------- Dec
+
+var #randomX 0
+var #randomY 0
+
+// ----------- RANDOM ATTACK
+:start
+
+	rand #randomX #startX #endX
+	rand #randomY #startY #endY
+	
+	//equipment stacking
+	if #randomX > 280 and #randomX < 430 and #randomY > 300 and #equipmentStacking == 1
+		goto :start
+	endif
+	
+	touchDown 0 #randomX #randomY
+	touchUp 0
+		
+	sleep #delay
+	
+goto :start
+
+:end
