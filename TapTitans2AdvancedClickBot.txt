@@ -130,7 +130,7 @@ var #lastPressHeroes 0
 var #resultManaPool 0
 var #resultCheckBoss 0
 var #resultUpdateTime 0
-var #resultClanQUest 0
+var #resultClanQuest 0
 
 
 // ----------- MAIN
@@ -147,7 +147,7 @@ var #resultClanQUest 0
 	//add general execution delays
 	#time = #time + #timeScaleAddition
 	
-	if #resultClanQUest  ==  0
+	if #resultClanQuest == 0 and #enableClanQuest == 1
 		goto :checkClanQuest
 	endif
 	
@@ -172,7 +172,7 @@ var #resultClanQUest 0
 		goto :pressSkills
 	endif
 		
-	if #loopCount == 1
+	if #loopCount == 1 and #enableClanQuest == 1
 		goto :checkClanQuest
 	elseif #loopCount == 2
 		goto :init
@@ -340,7 +340,7 @@ goto :start
 		goto :checkSkills
 	elseif #actionStepper == #orderLevelHeroes and #enableHeroes == 1
 		goto :levelHeroes
-	elseif #actionStepper == 5
+	elseif #actionStepper == 5 and #enableClanQuest == 1
 		#actionStepper = 0
 		goto :checkClanQuest
 	endif
@@ -417,7 +417,7 @@ goto :start
 
 	#calc1 = #clanQuestRunsPerReadyUp + 1
 	
-	if #clanQuestCount > 0 and #clanQuestCount < #calc1		
+	if #clanQuestCount > 0 and #clanQuestCount < #calc1	
 		goto :checkClanQuestReady
 	endif
 goto :start
