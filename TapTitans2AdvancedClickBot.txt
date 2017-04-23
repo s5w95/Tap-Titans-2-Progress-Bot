@@ -139,7 +139,7 @@ var #resultClanQuest 0
 
 	#resultManaPool = #loopCount % 901
 	#resultCheckBoss = #loopCount % 302
-	#resultClanQUest = #loopCount % 101
+	#resultClanQuest = #loopCount % 101
 	#resultUpdateTime = #loopCount % 80
 
 	#timeDiff = #minutes - #timeLastActionRun
@@ -409,7 +409,7 @@ goto :start
 
 // ----------- CHECK CLAN QUEST
 :checkClanQuest
-	getRGB #colorRed #colorGreen #colorBlue 70 20
+	getRGB #colorRed #colorGreen #colorBlue 75 20
 	
 	if #colorRed < 190 and #colorRed > 120
 		goto :checkClanQuestReady
