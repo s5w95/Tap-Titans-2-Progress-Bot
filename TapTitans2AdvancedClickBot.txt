@@ -1,6 +1,12 @@
-﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.1.1 - dev 2 ]
+// TT2 ClickBot edited by Pythonic
+// - Original by Tune389 -
+
+// FEATURES: Multiple CQ works. Variables are initialized for efficient farming.
 
 SCREEN_SIZE: 480x800
+
+// - MY VARS
+var #recheck 1
 
 // ----------- Settings
 var #enableFairies 1
@@ -10,7 +16,7 @@ var #enableTapping 1
 
 // ----------- Actions ----------- [ General ]
 var #runActionsOnStart 1
-var #runActionsEveryXMinutes 3
+var #runActionsEveryXMinutes 1
 var #fullManaSkill 3
 
 //Action Order
@@ -20,11 +26,11 @@ var #orderLevelSkills 3
 
 // ----------- Actions ----------- [ ClanQuest ]
 var #enableClanQuest 1
-var #clanQuestRunsPerReadyUp 1
+var #clanQuestRunsPerReadyUp 1 // How many time do you want to use diamonds - 1
 
 // ----------- Actions ----------- [ Heroes ]
 var #enableHeroes 1
-var #skillIntensity 1
+var #skillIntensity 5 // To 5 in order to make sure to level heroes.
 
 // ----------- Actions ----------- [ Skills ]
 var #enableSkills 1
@@ -48,9 +54,9 @@ var #startBossSkill 0
 var #startBossSecondarySkill 0
 
 // ----------- Actions ----------- [ Prestige ]
-var #enableAutoprestige 0
-var #prestigeAfterXMinutes 45
-
+var #enableAutoprestige 1 
+var #prestigeAfterXMinutes 90
+// ADD ~10-15 MINUTES TO HOW LONG IT TAKES TO PUSH TO YOUR FARM STAGE TO MAKE UP FOR ANY INEFFICIENCIES
 
 // ----------- Developer / Expert
 var #maxHitCount 9999999
@@ -406,30 +412,26 @@ goto :runActions
 	endif 
 goto :start
 
+// MAJOR CHANGES IN THIS SECTION!!
 
 // ----------- CHECK CLAN QUEST
 :checkClanQuest
-	getRGB #colorRed #colorGreen #colorBlue 75 20
-	
+
+	getRGB #colorRed #colorGreen #colorBlue 72 21
+	// added a section to tell the code to recheck if it should fight the boss again.
 	if #colorRed < 190 and #colorRed > 120
 		goto :checkClanQuestReady
 	endif
-
-	#calc1 = #clanQuestRunsPerReadyUp + 1
 	
-	if #clanQuestCount > 0 and #clanQuestCount < #calc1	
-		goto :checkClanQuestReady
-	endif
 goto :start
 	
 :checkClanQuestReady
-
-	//add quest
-	#clanQuestCount = #clanQuestCount + 1
-
+	if #clanQuestRunsPerReadyUp > 1 
+		#recheck = 1
+	endif
 	//open menu
 	sleep #btnDelay
-	touchDown 0 80 30
+	touchDown 0 80 25 // small tweak in case it helps
 	sleep #btnDelay
 	touchUp 0
 	sleep #btnDelay
@@ -441,23 +443,42 @@ goto :start
 	sleep #loadingClanQuestDelay
 
 	//button color 
-	getColor #color1 175 335
+	getRGB #colorRed #colorGreen #colorBlue 175 335
 	
 	#clanQuestLoopCount = 0
+
+	getRGB #colorRed2 #colorGreen2 #colorBlue2 295 712
 	
-	//addidional quest
-	if #color1 == 2055160
+	//addidional quest (MY EDIT: Make sure that it has a wider scope of possible colors to make sure it does the quest)
+	if #colorRed > 240 and #colorRed < 255 and #colorRed2 > 90 and #colorRed2 < 110 and #clanQuestRunsPerReadyUp > 0
 		touchDown 0 310 740
 		sleep #btnDelay
 		touchUp 0
 		sleep #menuPopUpDelay
 		goto :clanQuestCheckDias
-	elseif #color1 == 0
-		#clanQuestCount = #clanQuestRunsPerReadyUp
+	endif		
+	getRGB #colorRed2 #colorGreen2 #colorBlue2 282 712
+	if #colorRed > 240 and #colorRed < 255 and #colorGreen2 > 200 and #colorBlue2 > 200 and #clanQuestRunsPerReadyUp > 1
+		touchDown 0 310 740
+		sleep #btnDelay
+		touchUp 0
+		sleep #menuPopUpDelay
+		goto :clanQuestCheckDias
 	endif
-	
-goto :clanQuestClose
+	getRGB #colorRed2 #colorGreen2 #colorBlue2 295 712
+	if #colorRed > 240 and #colorRed < 255 and #colorGreen2 > 200 and #colorBlue2 > 200 and #clanQuestRunsPerReadyUp > 1
+		touchDown 0 310 740
+		sleep #btnDelay
+		touchUp 0
+		sleep #menuPopUpDelay
+		goto :clanQuestCheckDias
+	endif
+	if #colorRed < 100
+		#recheck = 0
+	endif
+	goto :clanQuestClose
 
+// THIS SUCCESSFULLY CHECKS FOR DIA SO I DON'T WANT TO CHANGE THIS.
 :clanQuestCheckDias
 	getColor #color1 40 215
 	if #color1 == -7775689
@@ -480,7 +501,7 @@ goto :clanQuestClose
 		touchDown 0 180 730
 		touchUp 0
 		sleep 25
-		#time = #time + #btnDelay
+		#time = #time + #btnDelay 
 		goto :clanQuestHit
 	endif
 
@@ -500,11 +521,11 @@ goto :clanQuestClose
 	endif
 	
 :clanQuestCloseCheck
-	if #clanQuestRunsPerReadyUp == #clanQuestCount
+	if #recheck = 1
+		goto :checkClanQuestReady
+	else
 		#clanQuestCount = 0
 		goto :start
-	else
-		goto :checkClanQuest
 	endif
 
 
