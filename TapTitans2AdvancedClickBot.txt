@@ -1,4 +1,4 @@
-﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.1.1 - dev 2 ]
+﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.1.1 - dev 3 ]
 
 SCREEN_SIZE: 480x800
 
@@ -85,6 +85,7 @@ var #tryWithDelay 0
 var #checkRunning 0
 var #clanQuestCount 0
 var #calc1 0
+var #recheckClanQuest 0
 
 // ----------- Delays
 var #btnDelay 150
@@ -409,27 +410,20 @@ goto :start
 
 // ----------- CHECK CLAN QUEST
 :checkClanQuest
-	getRGB #colorRed #colorGreen #colorBlue 75 20
+	getRGB #colorRed #colorGreen #colorBlue 72 21
 	
 	if #colorRed < 190 and #colorRed > 120
+		#recheckClanQuest = 1
 		goto :checkClanQuestReady
 	endif
 
-	#calc1 = #clanQuestRunsPerReadyUp + 1
-	
-	if #clanQuestCount > 0 and #clanQuestCount < #calc1	
-		goto :checkClanQuestReady
-	endif
 goto :start
 	
 :checkClanQuestReady
 
-	//add quest
-	#clanQuestCount = #clanQuestCount + 1
-
 	//open menu
 	sleep #btnDelay
-	touchDown 0 80 30
+	touchDown 0 80 25
 	sleep #btnDelay
 	touchUp 0
 	sleep #btnDelay
@@ -440,48 +434,61 @@ goto :start
 	touchUp 0
 	sleep #loadingClanQuestDelay
 
-	//button color 
+	//boss progress color 
 	getColor #color1 175 335
 	
 	#clanQuestLoopCount = 0
 	
-	//addidional quest
 	if #color1 == 2055160
+		//boss up
 		touchDown 0 310 740
 		sleep #btnDelay
 		touchUp 0
 		sleep #menuPopUpDelay
 		goto :clanQuestCheckDias
 	elseif #color1 == 0
-		#clanQuestCount = #clanQuestRunsPerReadyUp
+		//boss down
+		#recheckClanQuest = 0
 	endif
-	
+
+	//close (and recheck)
 goto :clanQuestClose
 
 :clanQuestCheckDias
 	getColor #color1 40 215
+	
 	if #color1 == -7775689
-		#clanQuestCount = #clanQuestRunsPerReadyUp
+		//no dias left
+		#recheckClanQuest = 0
 		goto :clanQuestClose
 	else
 		touchDown 0 325 450
 		sleep #btnDelay
 		touchUp 0
-		sleep #btnDelay
+		
+		sleep 3000
+		getColor #color1 20 770
+		
 		goto :clanQuestHit
 	endif
 	
 :clanQuestHit
+
+	if #color1 == -28929 and #clanQuestLoopCount == 0
+		//add quest
+		#clanQuestCount = #clanQuestCount + 1
+	endif
+
 	#clanQuestLoopCount = #clanQuestLoopCount + 1
-	if #clanQuestLoopCount > 1200
-		goto :clanQuestClose
-	else
-	//hit the boss
+	
+	if #color1 == -28929 and #clanQuestLoopCount < 1000
+		//hit the boss
 		touchDown 0 180 730
 		touchUp 0
-		sleep 25
+		sleep 28
 		#time = #time + #btnDelay
 		goto :clanQuestHit
+		goto :clanQuestClose
 	endif
 
 :clanQuestClose
@@ -500,11 +507,11 @@ goto :clanQuestClose
 	endif
 	
 :clanQuestCloseCheck
-	if #clanQuestRunsPerReadyUp == #clanQuestCount
+	if #recheckClanQuest == 1 and #clanQuestCount < #clanQuestRunsPerReadyUp
+		goto :checkClanQuestReady
+	else
 		#clanQuestCount = 0
 		goto :start
-	else
-		goto :checkClanQuest
 	endif
 
 
