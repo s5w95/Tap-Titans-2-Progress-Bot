@@ -488,6 +488,7 @@ goto :clanQuestClose
 		sleep 28
 		#time = #time + #btnDelay
 		goto :clanQuestHit
+	elseif #clanQuestLoopCount > 950
 		goto :clanQuestClose
 	endif
 
