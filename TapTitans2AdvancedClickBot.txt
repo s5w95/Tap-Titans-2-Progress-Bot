@@ -1,4 +1,4 @@
-﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.1.1 - dev 3 ]
+﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.2 - dev 1 ]
 
 SCREEN_SIZE: 480x800
 
@@ -13,7 +13,7 @@ var #runActionsOnStart 1
 var #runActionsEveryXMinutes 3
 var #fullManaSkill 3
 
-//Action Order
+//Action Order | 1,2,3 = push heroes | 2,3,1 = push ms
 var #orderLevelHeroes 1
 var #orderLevelMaster 2
 var #orderLevelSkills 3
@@ -24,12 +24,17 @@ var #clanQuestRunsPerReadyUp 1
 
 // ----------- Actions ----------- [ Heroes ]
 var #enableHeroes 1
+//clicks on level up per run
 var #skillIntensity 1
+//0 = disabled | 1 = Damon (Mage) | 2 = Finn (Ranged) | 3 = Nohni (Meel)
+var #maxOutHero 0
 
 // ----------- Actions ----------- [ Skills ]
 var #enableSkills 1
+//prevent sword master leveling after all skills are unlocked ( > lvl 600)
 var #stopMasterAfterSkillsUnlocked 1
 
+//press given skills every X seconds
 var #intervalCrit 0
 var #intervalFireBlade 0
 var #intervalMidas 0
@@ -43,14 +48,16 @@ var #justUnlockSkills 1
 var #startSkillCheckNow 1
 
 // ----------- Actions ----------- [ Boss ]
+//cancel actions if boss fight running
 var #checkBossFight 0
+//wait for given skill (2-6) then start boss
 var #startBossSkill 0
+//optional skill which will be clicked on start (not checked)
 var #startBossSecondarySkill 0
 
 // ----------- Actions ----------- [ Prestige ]
 var #enableAutoprestige 0
 var #prestigeAfterXMinutes 45
-
 
 // ----------- Developer / Expert
 var #maxHitCount 9999999
@@ -690,7 +697,7 @@ goto :levelHeroes
 	getColor #color1 440 760
 	if #color1 == #colorGray
 		#loopDetectionCount = 0
-		goto :levelHeroesPressLevelUp
+		goto :levelHeroesMaxOutMain
 	endif
 
 	touchDown 1 280 750
@@ -716,6 +723,35 @@ goto :levelHeroes
 	
 	goto :levelHeroesScrollDown
 
+:levelHeroesMaxOutMain
+	if #maxOutHero == 1
+		touchDown 1 466 570
+		sleep 40
+		touchUp 1
+		sleep 300
+		touchDown 1 466 570
+		sleep 40
+		touchUp 1
+	elseif #maxOutHero == 2
+		touchDown 1 466 645
+		sleep 40
+		touchUp 1
+		sleep 300
+		touchDown 1 466 645
+		sleep 40
+		touchUp 1
+	elseif #maxOutHero == 2
+		touchDown 1 466 720
+		sleep 40
+		touchUp 1
+		sleep 300
+		touchDown 1 466 720
+		sleep 40
+		touchUp 1
+	endif		
+goto :levelHeroesPressLevelUp
+	
+	
 :levelHeroesSlideUpCollection
 
 	#loopDetectionCount = #loopDetectionCount + 1
