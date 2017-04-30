@@ -1,4 +1,4 @@
-﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.2 - dev 1 ]
+﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.2 - dev 2 ]
 
 SCREEN_SIZE: 480x800
 
@@ -351,6 +351,9 @@ goto :start
 	elseif #actionStepper == 5 and #enableClanQuest == 1
 		#actionStepper = 0
 		goto :checkClanQuest
+	else 
+		#actionStepper = 0
+		goto :checkBoss
 	endif
 goto :runActions
 
@@ -440,7 +443,14 @@ goto :start
 	sleep #btnDelay
 	touchUp 0
 	sleep #loadingClanQuestDelay
-
+	
+	getColor #color1 420 725
+	
+	if #color1 == -1785765 and #clanQuestCount == 0
+		#recheckClanQuest = 0
+		goto :clanQuestClose
+	endif
+	
 	//boss progress color 
 	getColor #color1 175 335
 	
