@@ -1,4 +1,4 @@
-﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.2 - dev 2 ]
+﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.2 - dev 4 ]
 
 SCREEN_SIZE: 480x800
 
@@ -421,8 +421,9 @@ goto :start
 // ----------- CHECK CLAN QUEST
 :checkClanQuest
 	getRGB #colorRed #colorGreen #colorBlue 72 21
+	getColor #color1 65 795
 	
-	if #colorRed < 190 and #colorRed > 120
+	if #colorRed < 190 and #colorRed > 120 and #color1 == #colorStatsButton
 		#recheckClanQuest = 1
 		goto :checkClanQuestReady
 	endif
