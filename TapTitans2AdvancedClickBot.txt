@@ -1,17 +1,41 @@
-﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.2 - dev 4 ]
+﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.2 ]
 
 SCREEN_SIZE: 480x800
 
 // ----------- Settings
+
 var #enableFairies 1
+//; 1 = (default) collect all fairies
+//; 0 = no more ad pop ups will apear
+
 var #enablePremiumCollect 0
+//; 1 = collect all premium popups
+//; 0 = (default)
+
 var #hatchEggs 1
+//; 1 = (default) collect eggs
+
 var #enableTapping 1
+//; 1 = (default) hit the titans with your sm
+//; 0 = disable hits (execept on cq), no fairies will clicked at all
 
 // ----------- Actions ----------- [ General ]
-var #runActionsOnStart 1
+
+//level ms, heroes, skills every x minutes
 var #runActionsEveryXMinutes 3
+//; 3 = (default)
+//; 1-99 = in Minutes
+
+var #runActionsOnStart 1
+//; 1 = (default) run actions on script start
+//; 0 = run actions after given run time above
+
 var #fullManaSkill 3
+//; 2 = critical strike
+//; 3 = (default) midas
+//; 4 = fire blade
+//; 5 = heroes
+//; 6 = shadow clone
 
 //Action Order | 1,2,3 = push heroes | 2,3,1 = push ms
 var #orderLevelHeroes 1
@@ -20,17 +44,28 @@ var #orderLevelSkills 3
 
 // ----------- Actions ----------- [ ClanQuest ]
 var #enableClanQuest 1
+
+//fight the clan boss with max possible hits
 var #clanQuestRunsPerReadyUp 1
+//; 1 = (default) attack every ready up once for free
+//; 2-99 = spend dias for more attacks
 
 // ----------- Actions ----------- [ Heroes ]
 var #enableHeroes 1
+
 //clicks on level up per run
 var #skillIntensity 1
-//0 = disabled | 1 = Damon (Mage) | 2 = Finn (Ranged) | 3 = Nohni (Meel)
+//; 1 = (default)
+//; 2-99 = Multible level ups
+
 var #maxOutHero 0
+//; 1 = Damon (Mage)
+//; 2 = Finn (Ranged)
+//; 3 = Nohni (Meel)
 
 // ----------- Actions ----------- [ Skills ]
 var #enableSkills 1
+
 //prevent sword master leveling after all skills are unlocked ( > lvl 600)
 var #stopMasterAfterSkillsUnlocked 1
 
@@ -43,6 +78,8 @@ var #intervalShadowClone 0
 
 //just level each skill once
 var #justUnlockSkills 1
+//; 0 = level skills much as possible
+//; 1 = (default) level skills much as possible
 
 //run skill check after prestige or now
 var #startSkillCheckNow 1
@@ -50,10 +87,22 @@ var #startSkillCheckNow 1
 // ----------- Actions ----------- [ Boss ]
 //cancel actions if boss fight running
 var #checkBossFight 0
+
 //wait for given skill (2-6) then start boss
 var #startBossSkill 0
+//; 2 = critical strike
+//; 3 = midas
+//; 4 = fire blade
+//; 5 = heroes
+//; 6 = shadow clone
+
 //optional skill which will be clicked on start (not checked)
 var #startBossSecondarySkill 0
+//; 2 = critical strike
+//; 3 = midas
+//; 4 = fire blade
+//; 5 = heroes
+//; 6 = shadow clone
 
 // ----------- Actions ----------- [ Prestige ]
 var #enableAutoprestige 0
