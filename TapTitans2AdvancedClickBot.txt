@@ -647,6 +647,12 @@ goto :runActions
 
 // ----------- LEVEL HEROES
 :levelHeroes
+
+	//collect gold
+	touchDown 0 30 230
+	sleep 200
+	touchUp 0
+
 	//open menu
 	sleep #btnDelay
 	#time = #time + #btnDelay
@@ -849,8 +855,6 @@ goto :levelHeroesSlideUpCollection
 
 // ----------- LEVEL UP
 :levelUp
-	//collect gold
-	touchPress 0 30 215
 	//open stats
 	sleep #btnDelay
 	#time = #time + #btnDelay
@@ -941,7 +945,7 @@ goto :runActions
 		sleep #btnDelay
 		#time = #time + #btnDelay
 	elseif #hatchEggs == 1
-		touchPress 0 30 315
+		touchPress 0 30 285
 		sleep #btnDelay
 		#time = #time + #btnDelay
 	endif
