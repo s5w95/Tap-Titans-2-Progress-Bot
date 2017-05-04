@@ -1,4 +1,4 @@
-﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.2 ]
+﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.3 dev 1 ]
 
 SCREEN_SIZE: 480x800
 
@@ -56,7 +56,7 @@ var #enableHeroes 1
 //clicks on level up per run
 var #skillIntensity 1
 //; 1 = (default)
-//; 2-99 = Multible level ups
+//; 2-99 = Multiple level ups
 
 var #maxOutHero 0
 //; 1 = Damon (Mage)
@@ -79,7 +79,7 @@ var #intervalShadowClone 0
 //just level each skill once
 var #justUnlockSkills 1
 //; 0 = level skills much as possible
-//; 1 = (default) level skills much as possible
+//; 1 = (default) just unlock
 
 //run skill check after prestige or now
 var #startSkillCheckNow 1
@@ -298,6 +298,7 @@ goto :start
 :loopDetected
 	toast loop detected - restarting ...
 	#loopCount = 0
+	#loopDetectionCount = 0
 goto :init
 
 // ----------- PRESS SKILLS
@@ -317,6 +318,12 @@ goto :init
 	sleep #menuSlideDelay
 	#time = #time + 200
 
+	#timeDiff = #secondsTotal - #lastPressHeroes
+	if #timeDiff >= #intervalHeroes and #intervalHeroes > 0
+		#lastPressHeroes = #secondsTotal
+		touchPress 0 360 710
+		#time = #time + 200
+	endif
 	#timeDiff = #secondsTotal - #lastPressCrit
 	if #timeDiff >= #intervalCrit and #intervalCrit > 0
 		#lastPressCrit = #secondsTotal
@@ -333,12 +340,6 @@ goto :init
 	if #timeDiff >= #intervalMidas and #intervalMidas > 0
 		#lastPressMidas = #secondsTotal
 		touchPress 0 200 710
-		#time = #time + 200
-	endif
-	#timeDiff = #secondsTotal - #lastPressHeroes
-	if #timeDiff >= #intervalHeroes and #intervalHeroes > 0
-		#lastPressHeroes = #secondsTotal
-		touchPress 0 360 710
 		#time = #time + 200
 	endif
 	#timeDiff = #secondsTotal - #lastPressShadowClone
