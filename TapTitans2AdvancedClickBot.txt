@@ -11,6 +11,9 @@ var #enablePremiumCollect 0
 var #hatchEggs 1
 //; 1 = (default) collect eggs
 
+var #enableClanShip 1
+//; 1 = click glowing clan ship (default)
+
 var #enableTapping 1
 //; 1 = (default) hit the titans with your sm
 //; 0 = disable hits (execept on cq), no fairies will clicked at all
@@ -65,7 +68,11 @@ var #enableSkills 1
 //prevent sword master leveling after all skills are unlocked ( > lvl 600)
 var #stopMasterAfterSkillsUnlocked 1
 
+//force max level on heavenly strike
+var #maxOutHeavenlyStrike = 1
+
 //press given skills every X seconds
+var #intervalStrike 0
 var #intervalCrit 0
 var #intervalFireBlade 0
 var #intervalMidas 0
@@ -174,6 +181,7 @@ var #seconds 0
 var #secondsTotal 0
 var #minutes 0
 
+var #lastPressStrike 0
 var #lastPressCrit 0
 var #lastPressFireBlade 0
 var #lastPressMidas 0
@@ -323,6 +331,12 @@ goto :init
 		sleep 250
 	endif
 
+	#timeDiff = #secondsTotal - #lastPressStrike
+	if #timeDiff >= #intervalStrike and #intervalStrike > 0
+		#lastPressStrike = #secondsTotal
+		touchPress 0 40 710
+		#time = #time + 200
+	endif
 	#timeDiff = #secondsTotal - #lastPressHeroes
 	if #timeDiff >= #intervalHeroes and #intervalHeroes > 0
 		#lastPressHeroes = #secondsTotal
@@ -603,8 +617,14 @@ goto :clanQuestClose
 	endif
 
 	#skillCheckStepper = #skillCheckStepper + 1
-
-	if #skillCheckStepper == 1
+	
+	if #maxOutHeavenlyStrike == 1
+		#colorBlue = 2
+	else
+		getRGB #colorRed #colorGreen #colorBlue 450 634
+	endif
+	
+	if #skillCheckStepper == 1 and #colorBlue == 2
 		// first skill
 		sleep #btnDelay
 		#time = #time + #btnDelay
@@ -1004,6 +1024,10 @@ goto :runActions
 		touchPress 0 30 285
 		sleep #btnDelay
 		#time = #time + #btnDelay
+	elseif #enableClanShip == 1
+		touchPress 0 30 165
+		sleep #shipDelay
+		#time = #time + #shipDelay
 	endif
 		
 goto :pressSkills
