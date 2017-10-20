@@ -92,10 +92,10 @@ var #startSkillCheckNow 1
 var #checkBossFight 0
 
 //wait for given skill (2-6) then start boss
-var #startBossSkill 0
+var #startBossSkill 4
 //; 2 = critical strike
 //; 3 = midas
-//; 4 = fire blade
+//; 4 = fire blade (default)
 //; 5 = heroes
 //; 6 = shadow clone
 
@@ -736,8 +736,8 @@ goto :runActions
 	sleep #btnDelay
 	#time = #time + #btnDelay
 	touchUp 0
-	sleep 1000
-	#time = #time + 1000
+	sleep 2000
+	#time = #time + 2000
 	
 	if #tryWithDelay == 1
 		sleep 3000
