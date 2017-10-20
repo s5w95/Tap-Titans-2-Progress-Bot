@@ -60,7 +60,7 @@ var #skillIntensity 1
 var #maxOutHero 0
 //; 1 = Damon (Mage)
 //; 2 = Finn (Ranged)
-//; 3 = Nohni (Meel)
+//; 3 = Nohni (Melee)
 
 // ----------- Actions ----------- [ Skills ]
 var #enableSkills 1
@@ -825,19 +825,19 @@ goto :levelHeroes
 		sleep 40
 		touchUp 1
 	elseif #maxOutHero == 2
-		touchDown 1 466 645
-		sleep 40
-		touchUp 1
-		sleep 300
-		touchDown 1 466 645
-		sleep 40
-		touchUp 1
-	elseif #maxOutHero == 2
 		touchDown 1 466 720
 		sleep 40
 		touchUp 1
 		sleep 300
 		touchDown 1 466 720
+		sleep 40
+		touchUp 1
+	elseif #maxOutHero == 3
+		touchDown 1 466 645
+		sleep 40
+		touchUp 1
+		sleep 300
+		touchDown 1 466 645
 		sleep 40
 		touchUp 1
 	endif		
