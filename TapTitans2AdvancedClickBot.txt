@@ -536,6 +536,7 @@ goto :start
 	elseif #color1 == 0
 		//boss down
 		#recheckClanQuest = 0
+		#clanQuestCount = 0 // Boss is dead? Then set the CQ count to 0
 	endif
 
 	//close (and recheck)
@@ -598,7 +599,7 @@ goto :clanQuestClose
 	if #recheckClanQuest == 1 and #clanQuestCount < #clanQuestRunsPerReadyUp
 		goto :checkClanQuestReady
 	else
-		#clanQuestCount = 0
+		#clanQuestCount = #clanQuestCount - 1 // Subtract 1 from the CQ count so it does only 1 CQ when the next CQ is ready.
 		goto :start
 	endif
 
