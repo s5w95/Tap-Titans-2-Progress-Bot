@@ -62,3 +62,9 @@ A HiroMacro script for Tap Titans game
  - checkBossFight: 0|1 (enable this in the late game, bot skipps actions while fighting with the boss)
  - hatchEggs 0|1
  - enableTapping 0|1
+ 
+ ##Credits
+ - JasonW96 Thanks for your epvp support and some improvements
+ - OthorWight Thanks for some ideas & fixes
+ - djo5296
+
