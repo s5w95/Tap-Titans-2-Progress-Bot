@@ -69,7 +69,7 @@ var #enableSkills 1
 var #stopMasterAfterSkillsUnlocked 1
 
 //force max level on heavenly strike
-var #maxOutHeavenlyStrike = 1
+var #maxOutHeavenlyStrike 1
 
 //press given skills every X seconds
 var #intervalStrike 0
