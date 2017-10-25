@@ -58,9 +58,9 @@ var #skillIntensity 1
 //; 2-99 = Multiple level ups
 
 var #maxOutHero 3
-//; 1 = Damon (Mage)
-//; 2 = Finn (Ranged)
-//; 3 = Nohni (Melee)
+//; 1 = Finn (Ranged)
+//; 2 = Nohni (Melee)
+//; 3 = Damon (Mage)
 
 var #mainHeroRoundTripLevelUps 5
 //; level up count on every action run for your main hero
@@ -834,9 +834,9 @@ goto :levelHeroes
 	if #maxOutHero == 1
 		touchDown 1 466 570
 	elseif #maxOutHero == 2
-		touchDown 1 466 720
-	elseif #maxOutHero == 3
 		touchDown 1 466 645
+	elseif #maxOutHero == 3
+		touchDown 1 466 720
 	endif		
 	
 	sleep 40
