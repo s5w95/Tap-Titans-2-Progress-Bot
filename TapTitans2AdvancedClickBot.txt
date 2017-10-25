@@ -1,4 +1,4 @@
-﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.4 dev 2 ]
+﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.4 dev 3 ]
 
 SCREEN_SIZE: 480x800
 
@@ -57,10 +57,13 @@ var #skillIntensity 1
 //; 1 = (default)
 //; 2-99 = Multiple level ups
 
-var #maxOutHero 0
+var #maxOutHero 3
 //; 1 = Damon (Mage)
 //; 2 = Finn (Ranged)
 //; 3 = Nohni (Melee)
+
+var #mainHeroRoundTripLevelUps 5
+//; level up count on every action run for your main hero
 
 // ----------- Actions ----------- [ Skills ]
 var #enableSkills 1
@@ -134,6 +137,7 @@ var #actionStepper 0
 var #levelHeroesStepper 0
 var #bossFightInProgress 0
 var #skillActive 0
+var #leveHighLevelHeros 0
 var #colorRed 0
 var #colorBlue 0
 var #colorGreen 0
@@ -158,7 +162,7 @@ var #menuY 780
 var #menuStats 15
 var #menuHeroes 120
 var #menuCloseY 455
-var #menuCloseX 466
+var #menuCloseX 470
 
 // ----------- Colors
 var #colorWhite -65793
@@ -169,7 +173,6 @@ var #colorLevelUpAvailable 1338350
 var #colorBlack 397861
 var #colorStatsButton 3826675
 var #colorGray 2695200
-//var #colorItemBossActive 2432264 127 70
 
 // ----------- TimeSets
 var #timeLastActionRun 0
@@ -315,7 +318,10 @@ goto :init
 		goto :init
 	endif
 
-	
+	touchDown 0 #menuCloseX #menuCloseY
+	sleep 50
+	touchUp 0
+	sleep 50
 	touchDown 0 #menuCloseX #menuCloseY
 	sleep 50
 	touchUp 0
@@ -414,6 +420,9 @@ goto :start
 		goto :levelUp
 	elseif #actionStepper == #orderLevelSkills and #enableSkills == 1 and  #skillsUnlocked < 5
 		#skillsUnlocked = 0
+		goto :checkSkills
+	elseif #actionStepper == #orderLevelSkills and #enableSkills == 1 and  #skillsUnlocked == 5 and #maxOutHeavenlyStrike == 1
+		toast Up this shit
 		goto :checkSkills
 	elseif #actionStepper == #orderLevelHeroes and #enableHeroes == 1
 		goto :levelHeroes
@@ -611,8 +620,12 @@ goto :clanQuestClose
 		goto :checkSkillsFinish
 	endif
 
-	if #skillsUnlocked == 5 and #justUnlockSkills == 1
+	if #skillsUnlocked == 5 and #justUnlockSkills == 1 and #maxOutHeavenlyStrike == 0
 		toast skills unlocked, stop now until next prestige
+		goto :checkSkillsFinish
+	endif
+	
+	if #skillsUnlocked == 5 and #justUnlockSkills == 1 and #skillCheckStepper == 2 and #maxOutHeavenlyStrike == 1
 		goto :checkSkillsFinish
 	endif
 
@@ -779,7 +792,6 @@ goto :runActions
 	
 goto :levelHeroes
 
-
 :levelHeroesScrollDown
 	#loopDetectionCount = #loopDetectionCount + 1
 	if #loopDetectionCount == 50
@@ -816,32 +828,25 @@ goto :levelHeroes
 	goto :levelHeroesScrollDown
 
 :levelHeroesMaxOutMain
+
+	#loopDetectionCount = #loopDetectionCount + 1
+
 	if #maxOutHero == 1
 		touchDown 1 466 570
-		sleep 40
-		touchUp 1
-		sleep 300
-		touchDown 1 466 570
-		sleep 40
-		touchUp 1
 	elseif #maxOutHero == 2
 		touchDown 1 466 720
-		sleep 40
-		touchUp 1
-		sleep 300
-		touchDown 1 466 720
-		sleep 40
-		touchUp 1
 	elseif #maxOutHero == 3
 		touchDown 1 466 645
-		sleep 40
-		touchUp 1
-		sleep 300
-		touchDown 1 466 645
-		sleep 40
-		touchUp 1
 	endif		
-goto :levelHeroesPressLevelUp
+	
+	sleep 40
+	touchUp 1
+	sleep 40
+		
+	if #loopDetectionCount == #mainHeroRoundTripLevelUps
+		goto :levelHeroesPressLevelUp
+	endif
+goto :levelHeroesMaxOutMain
 	
 	
 :levelHeroesSlideUpCollection
