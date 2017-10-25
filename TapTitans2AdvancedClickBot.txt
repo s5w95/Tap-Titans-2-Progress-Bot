@@ -1089,6 +1089,11 @@ goto :pressSkills
 		goto :randomTouch
 	endif
 	
+	//prevent hero story window
+	if #randomY > 184 and #randomY < 233 and #randomX > 403
+		goto :randomTouch
+	endif
+	
 	if #enableTapping == 1
 		touchDown 0 #randomX #randomY
 		touchUp 0
