@@ -57,10 +57,13 @@ var #skillIntensity 1
 //; 1 = (default)
 //; 2-99 = Multiple level ups
 
-var #maxOutHero 3
+var #maxOutHero 2
 //; 1 = Finn (Ranged)
 //; 2 = Nohni (Melee)
 //; 3 = Damon (Mage)
+
+var #focusMainHero 1
+//; increase main hero level runs
 
 var #mainHeroRoundTripLevelUps 5
 //; level up count on every action run for your main hero
@@ -79,7 +82,7 @@ var #intervalStrike 0
 var #intervalCrit 0
 var #intervalFireBlade 0
 var #intervalMidas 0
-var #intervalHeroes 0
+var #intervalHeroes 1
 var #intervalShadowClone 0
 
 //just level each skill once
@@ -137,7 +140,7 @@ var #actionStepper 0
 var #levelHeroesStepper 0
 var #bossFightInProgress 0
 var #skillActive 0
-var #leveHighLevelHeros 0
+var #levelMainHero 0
 var #colorRed 0
 var #colorBlue 0
 var #colorGreen 0
@@ -192,6 +195,7 @@ var #lastPressShadowClone 0
 var #lastPressHeroes 0
 
 var #resultManaPool 0
+var #resultLevelMainHero 0
 var #resultCheckBoss 0
 var #resultUpdateTime 0
 var #resultClanQuest 0
@@ -202,6 +206,7 @@ var #resultClanQuest 0
 	#loopCount = #loopCount + 1
 
 	#resultManaPool = #loopCount % 901
+	#resultLevelMainHero = #loopCount % 201
 	#resultCheckBoss = #loopCount % 302
 	#resultClanQuest = #loopCount % 101
 	#resultUpdateTime = #loopCount % 80
@@ -246,6 +251,9 @@ var #resultClanQuest 0
 		goto :runActions
 	elseif #resultCheckBoss == 0
 		goto :checkBoss
+	elseif #resultLevelMainHero == 0 and #focusMainHero == 1
+		#levelMainHero = 1
+		goto :levelHeroes
 	elseif #resultManaPool == 0
 		goto :checkMana
 	elseif #loopCount == #maxHitCount
@@ -839,9 +847,15 @@ goto :levelHeroes
 		touchDown 1 466 720
 	endif		
 	
-	sleep 40
+	sleep 100
 	touchUp 1
 	sleep 40
+		
+	if #loopDetectionCount == #mainHeroRoundTripLevelUps and #levelMainHero == 1
+		#levelMainHero = 0
+		touchPress 0 #menuCloseX #menuCloseY
+		goto :start
+	endif
 		
 	if #loopDetectionCount == #mainHeroRoundTripLevelUps
 		goto :levelHeroesPressLevelUp
