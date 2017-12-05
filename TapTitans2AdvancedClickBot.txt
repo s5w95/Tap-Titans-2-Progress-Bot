@@ -1,4 +1,4 @@
-﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.5 dev 1 ]
+﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.5 dev 3 ]
 
 SCREEN_SIZE: 480x800
 
@@ -53,14 +53,14 @@ var #clanQuestRunsPerReadyUp 1
 var #enableHeroes 1
 
 //clicks on level up per run
-var #skillIntensity 1
-//; 1 = (default)
+var #skillIntensity 2
+//; 2 = (default)
 //; 2-99 = Multiple level ups
 
 var #maxOutHero 2
-//; 1 = Finn (Ranged)
+//; 1 = Damon (Mage)
 //; 2 = Nohni (Melee)
-//; 3 = Damon (Mage)
+//; 3 = Finn (Ranged)
 
 var #focusMainHero 1
 //; increase main hero level runs
@@ -283,6 +283,14 @@ goto :init
 		sleep 10000
 	endif
 
+	if #enablePremiumCollect == 0
+		sleep 250
+		touchDown 0 100 625
+		sleep 250
+		touchUp 0
+		sleep 250
+	endif
+	
 	if #enablePremiumCollect == 1
 		touchDown 0 350 630
 		sleep 100
@@ -772,7 +780,7 @@ goto :runActions
 		#loopDetectionCount = 0
 		#time = #time + 2000
 		
-		goto :levelHeroesSlideDownCollection
+		goto :levelHeroesMaxOutMain
 	endif
 	
 	#tryWithDelay = 1
@@ -788,6 +796,27 @@ goto :levelHeroes
 
 	getColor #color1 475 510
 	if #color1 == #colorGray
+	
+		//slide 1 hero up
+		touchDown 1 280 740
+		touchMove 1 280 720
+		sleep 50
+		touchMove 1 280 700
+		sleep 50
+		touchMove 1 280 680
+		touchMove 1 280 670
+		sleep 20
+		touchMove 1 280 650
+		sleep 50
+		touchMove 1 280 630
+		sleep 80
+		touchMove 1 280 610
+		sleep 100
+		touchMove 1 280 600
+		sleep 200
+		touchUp 1
+		sleep 200
+	
 		#loopDetectionCount = 0
 		goto :closeMenu
 	endif
@@ -821,11 +850,11 @@ goto :levelHeroes
 	#loopDetectionCount = #loopDetectionCount + 1
 
 	if #maxOutHero == 1
-		touchDown 1 466 570
+		touchDown 1 466 530
 	elseif #maxOutHero == 2
-		touchDown 1 466 645
+		touchDown 1 466 600
 	elseif #maxOutHero == 3
-		touchDown 1 466 720
+		touchDown 1 466 680
 	endif		
 	
 	sleep 100
@@ -839,7 +868,7 @@ goto :levelHeroes
 	endif
 		
 	if #loopDetectionCount == #mainHeroRoundTripLevelUps
-		goto :levelHeroesPressLevelUp
+		goto :levelHeroesSlideDownCollection
 	endif
 goto :levelHeroesMaxOutMain
 	
