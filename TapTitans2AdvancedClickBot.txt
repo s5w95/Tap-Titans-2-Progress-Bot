@@ -290,6 +290,7 @@ goto :init
 		sleep 100
 	endif
 
+	#lastPressStrike = 0
 	#lastPressCrit = 0
 	#lastPressFireBlade = 0
 	#lastPressMidas = 0
