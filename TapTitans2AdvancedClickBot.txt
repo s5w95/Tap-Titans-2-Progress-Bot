@@ -1,4 +1,4 @@
-﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.4 dev 3 ]
+﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.5 dev 1 ]
 
 SCREEN_SIZE: 480x800
 
@@ -771,69 +771,49 @@ goto :runActions
 		#loopDetectionCount = 0
 		#time = #time + 2000
 		
-		//force 1 down scroll
-		touchDown 1 280 750
-		touchMove 1 280 745
-		sleep 100
-		touchMove 1 280 740
-		touchMove 1 280 735
-		sleep 50
-		touchMove 1 280 700
-		touchMove 1 280 690
-		sleep 50
-		touchMove 1 280 500
-		touchMove 1 280 450
-		sleep 20
-		touchMove 1 280 420
-		touchMove 1 280 410
-		sleep 50
-		touchMove 1 280 400
-		touchUp 1
-		sleep 200
-		
-		#time = #time + 470
-		
-		goto :levelHeroesScrollDown
+		goto :levelHeroesSlideDownCollection
 	endif
 	
 	#tryWithDelay = 1
 	
 goto :levelHeroes
 
-:levelHeroesScrollDown
+:levelHeroesScrollUp
+
 	#loopDetectionCount = #loopDetectionCount + 1
 	if #loopDetectionCount == 50
 		goto :loopDetected
 	endif
 
-	getColor #color1 440 760
+	getColor #color1 475 510
 	if #color1 == #colorGray
 		#loopDetectionCount = 0
-		goto :levelHeroesMaxOutMain
+		goto :closeMenu
 	endif
-
-	touchDown 1 280 750
-	touchMove 1 280 745
-	sleep 100
-	touchMove 1 280 740
-	touchMove 1 280 735
+	
+	touchDown 1 280 500
 	sleep 50
-	touchMove 1 280 700
-	touchMove 1 280 690
-	sleep 50
-	touchMove 1 280 500
-	touchMove 1 280 450
+	touchMove 1 280 510
+	touchMove 1 280 520
 	sleep 20
-	touchMove 1 280 420
-	touchMove 1 280 410
+	touchMove 1 280 550
+	touchMove 1 280 600
 	sleep 50
-	touchMove 1 280 400
+	touchMove 1 280 790
+	touchMove 1 280 800
+	sleep 50
+	touchMove 1 280 835
+	touchMove 1 280 840
+	sleep 100
+	touchMove 1 280 845
+	touchMove 1 280 850
+	
 	touchUp 1
 	sleep 200
 	
 	#time = #time + 470
 	
-	goto :levelHeroesScrollDown
+	goto :levelHeroesScrollUp
 
 :levelHeroesMaxOutMain
 
@@ -863,45 +843,45 @@ goto :levelHeroes
 goto :levelHeroesMaxOutMain
 	
 	
-:levelHeroesSlideUpCollection
+:levelHeroesSlideDownCollection
 
 	#loopDetectionCount = #loopDetectionCount + 1
 	if #loopDetectionCount == 50
 		goto :loopDetected
 	endif
 
-	getColor #color1 475 510
+	getColor #color1 440 760
 	if #color1 == #colorGray
-		goto :closeMenu
+		goto :levelHeroesScrollUp
 	endif
 
-	touchDown 1 280 510
-	sleep 20
-	touchMove 1 280 512
-	touchMove 1 280 514
-	touchMove 1 280 516
-	sleep 20
-	touchMove 1 280 520
-	touchMove 1 280 540
-	sleep 20
-	touchMove 1 280 580
-	touchMove 1 280 600
-	sleep 20
-	touchMove 1 280 630
-	touchMove 1 280 670
-	sleep 20
-	touchMove 1 280 690
-	touchMove 1 280 700
-	sleep 20
-	touchMove 1 280 736
-	touchMove 1 280 738
-	sleep 20
+	touchDown 1 280 742
 	touchMove 1 280 740
-	touchMove 1 280 742
+	sleep 20
+	touchMove 1 280 738
+	touchMove 1 280 736
+	sleep 20
+	touchMove 1 280 700
+	touchMove 1 280 690
+	sleep 20
+	touchMove 1 280 670
+	touchMove 1 280 630
+	sleep 20
+	touchMove 1 280 600
+	touchMove 1 280 580
+	sleep 20
+	touchMove 1 280 540
+	touchMove 1 280 520
+	sleep 20
+	touchMove 1 280 516
+	touchMove 1 280 514
+	touchMove 1 280 512
+	sleep 20
+	touchMove 1 280 510
+
 	sleep 200
 	touchUp 1
 	touchPress 1 280 750
-	
 	#time = #time + 540
 	
 goto :levelHeroesPressLevelUp
@@ -909,34 +889,34 @@ goto :levelHeroesPressLevelUp
 :levelHeroesPressLevelUp
 	#pressLevelUpLoopCount = #pressLevelUpLoopCount + 1
 	
-	touchDown 1 466 720
-	sleep 40
-	touchUp 1
-	touchDown 1 466 700
-	sleep 40
-	touchUp 1
-	touchDown 1 466 680
-	sleep 40
-	touchUp 1
-	touchDown 1 466 660
-	sleep 40
-	touchUp 1
-	touchDown 1 466 640
-	sleep 40
-	touchUp 1
-	touchDown 1 466 620
-	sleep 40
-	touchUp 1
-	touchDown 1 466 600
-	sleep 40
-	touchUp 1
-	touchDown 1 466 580
+	touchDown 1 466 540
 	sleep 40
 	touchUp 1
 	touchDown 1 466 560
 	sleep 40
 	touchUp 1
-	touchDown 1 466 540
+	touchDown 1 466 580
+	sleep 40
+	touchUp 1
+	touchDown 1 466 600
+	sleep 40
+	touchUp 1
+	touchDown 1 466 620
+	sleep 40
+	touchUp 1
+	touchDown 1 466 640
+	sleep 40
+	touchUp 1
+	touchDown 1 466 660
+	sleep 40
+	touchUp 1
+	touchDown 1 466 680
+	sleep 40
+	touchUp 1
+	touchDown 1 466 700
+	sleep 40
+	touchUp 1
+	touchDown 1 466 720
 	sleep 40
 	touchUp 1
 
@@ -946,7 +926,7 @@ goto :levelHeroesPressLevelUp
 		goto :levelHeroesPressLevelUp
 	endif
 	#pressLevelUpLoopCount = 0
-goto :levelHeroesSlideUpCollection
+goto :levelHeroesSlideDownCollection
 
 // ----------- LEVEL UP
 :levelUp
