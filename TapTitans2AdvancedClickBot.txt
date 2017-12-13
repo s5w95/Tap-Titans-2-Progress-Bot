@@ -1,4 +1,4 @@
-﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.5 dev 4 ]
+﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.5 dev 5 ]
 
 SCREEN_SIZE: 480x800
 
@@ -755,10 +755,10 @@ goto :runActions
 :levelHeroes
 
 	//collect gold
-	touchDown 0 30 230
-	sleep 200
+	touchDown 0 15 230
+	sleep #btnDelay
 	touchUp 0
-
+	
 	//open menu
 	sleep #btnDelay
 	#time = #time + #btnDelay
@@ -1050,10 +1050,17 @@ goto :runActions
 		sleep #btnDelay
 		#time = #time + #btnDelay
 	elseif #hatchEggs == 1
-		touchPress 0 30 285
+		touchDown 0 15 285
 		sleep #btnDelay
 		#time = #time + #btnDelay
+		touchUp 0
+		sleep #btnDelay
 	elseif #enableClanShip == 1
+		//collect gold (click away heroe screen)
+		touchDown 0 15 230
+		sleep #btnDelay
+		touchUp 0
+		sleep #btnDelay
 		touchPress 0 80 105
 		sleep #shipDelay
 		#time = #time + #shipDelay
@@ -1100,7 +1107,7 @@ goto :pressSkills
 	endif
 	
 	//prevent hero story window
-	if #randomY > 184 and #randomY < 233 and #randomX > 403
+	if #randomY < 177 and #randomX < 140
 		goto :randomTouch
 	endif
 	
