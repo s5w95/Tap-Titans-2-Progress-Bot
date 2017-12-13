@@ -1,4 +1,4 @@
-﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.5 dev 3 ]
+﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.5 dev 4 ]
 
 SCREEN_SIZE: 480x800
 
@@ -156,6 +156,7 @@ var #recheckClanQuest 0
 // ----------- Delays
 var #btnDelay 150
 var #hitDelay 40
+var #shipDelay 200
 var #menuSlideDelay 200
 var #menuPopUpDelay 500
 var #loadingClanQuestDelay 3000
@@ -439,7 +440,6 @@ goto :start
 		#skillsUnlocked = 0
 		goto :checkSkills
 	elseif #actionStepper == #orderLevelSkills and #enableSkills == 1 and  #skillsUnlocked == 5 and #maxOutHeavenlyStrike == 1
-		toast Up this shit
 		goto :checkSkills
 	elseif #actionStepper == #orderLevelHeroes and #enableHeroes == 1
 		goto :levelHeroes
@@ -798,21 +798,21 @@ goto :levelHeroes
 	if #color1 == #colorGray
 	
 		//slide 1 hero up
-		touchDown 1 280 740
-		touchMove 1 280 720
+		touchDown 1 325 740
+		touchMove 1 325 720
 		sleep 50
-		touchMove 1 280 700
+		touchMove 1 325 700
 		sleep 50
-		touchMove 1 280 680
-		touchMove 1 280 670
+		touchMove 1 325 680
+		touchMove 1 325 670
 		sleep 20
-		touchMove 1 280 650
+		touchMove 1 325 650
 		sleep 50
-		touchMove 1 280 630
+		touchMove 1 325 630
 		sleep 80
-		touchMove 1 280 610
+		touchMove 1 325 610
 		sleep 100
-		touchMove 1 280 600
+		touchMove 1 325 600
 		sleep 200
 		touchUp 1
 		sleep 200
@@ -821,22 +821,22 @@ goto :levelHeroes
 		goto :closeMenu
 	endif
 	
-	touchDown 1 280 500
+	touchDown 1 325 500
 	sleep 50
-	touchMove 1 280 510
-	touchMove 1 280 520
+	touchMove 1 325 510
+	touchMove 1 325 520
 	sleep 20
-	touchMove 1 280 550
-	touchMove 1 280 600
+	touchMove 1 325 550
+	touchMove 1 325 600
 	sleep 50
-	touchMove 1 280 790
-	touchMove 1 280 800
+	touchMove 1 325 790
+	touchMove 1 325 800
 	sleep 50
-	touchMove 1 280 835
-	touchMove 1 280 840
+	touchMove 1 325 835
+	touchMove 1 325 840
 	sleep 100
-	touchMove 1 280 845
-	touchMove 1 280 850
+	touchMove 1 325 845
+	touchMove 1 325 850
 	
 	touchUp 1
 	sleep 200
@@ -885,33 +885,33 @@ goto :levelHeroesMaxOutMain
 		goto :levelHeroesScrollUp
 	endif
 
-	touchDown 1 280 742
-	touchMove 1 280 740
+	touchDown 1 325 742
+	touchMove 1 325 740
 	sleep 20
-	touchMove 1 280 738
-	touchMove 1 280 736
+	touchMove 1 325 738
+	touchMove 1 325 736
 	sleep 20
-	touchMove 1 280 700
-	touchMove 1 280 690
+	touchMove 1 325 700
+	touchMove 1 325 690
 	sleep 20
-	touchMove 1 280 670
-	touchMove 1 280 630
+	touchMove 1 325 670
+	touchMove 1 325 630
 	sleep 20
-	touchMove 1 280 600
-	touchMove 1 280 580
+	touchMove 1 325 600
+	touchMove 1 325 580
 	sleep 20
-	touchMove 1 280 540
-	touchMove 1 280 520
+	touchMove 1 325 540
+	touchMove 1 325 520
 	sleep 20
-	touchMove 1 280 516
-	touchMove 1 280 514
-	touchMove 1 280 512
+	touchMove 1 325 516
+	touchMove 1 325 514
+	touchMove 1 325 512
 	sleep 20
-	touchMove 1 280 510
+	touchMove 1 325 510
 
 	sleep 200
 	touchUp 1
-	touchPress 1 280 750
+	touchPress 1 325 750
 	#time = #time + 540
 	
 goto :levelHeroesPressLevelUp
@@ -1054,7 +1054,7 @@ goto :runActions
 		sleep #btnDelay
 		#time = #time + #btnDelay
 	elseif #enableClanShip == 1
-		touchPress 0 30 165
+		touchPress 0 80 105
 		sleep #shipDelay
 		#time = #time + #shipDelay
 	endif
