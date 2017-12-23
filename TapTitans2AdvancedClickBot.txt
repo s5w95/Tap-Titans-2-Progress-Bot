@@ -1,4 +1,4 @@
-﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.6 dev 1 ]
+﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.6 dev 2 ]
 
 SCREEN_SIZE: 480x800
 
@@ -74,7 +74,7 @@ var #enableSkills 1
 //prevent sword master leveling after all skills are unlocked ( > lvl 600)
 var #stopMasterAfterSkillsUnlocked 1
 
-//force max level on heavenly strike
+//force max level on heavenly strike - option above is required
 var #maxOutHeavenlyStrike 1
 
 //press given skills every X seconds
@@ -231,12 +231,19 @@ var #resultClanQuest 0
 		#minutes = (#time/1000)/60
 	endif
 	
-	if #resultUpdateTime == 0 and #enablePremiumCollect == 1
-		touchDown 0 350 630
-		sleep 100
+	//collect ads
+	if #resultUpdateTime == 0 and #enablePremiumCollect == 0
+		touchDown 0 100 625
+		sleep 250
 		touchUp 0
-		sleep 100
+		sleep 250
+	elseif #resultUpdateTime == 0 and #enablePremiumCollect == 1
+		touchDown 0 350 630
+		sleep 250
+		touchUp 0
+		sleep 250
 	endif
+	//end ads
 	
 	if #resultUpdateTime == 0 and #timeDiff < #runActionsEveryXMinutes
 		goto :pressSkills
@@ -284,20 +291,16 @@ goto :init
 		sleep 10000
 	endif
 
+	//collect ads
 	if #enablePremiumCollect == 0
-		sleep 250
 		touchDown 0 100 625
-		sleep 250
-		touchUp 0
-		sleep 250
-	endif
-	
-	if #enablePremiumCollect == 1
+	else
 		touchDown 0 350 630
-		sleep 100
-		touchUp 0
-		sleep 100
 	endif
+	sleep 250
+	touchUp 0
+	sleep 250
+	//end ads
 
 	#lastPressStrike = 0
 	#lastPressCrit = 0
@@ -337,23 +340,26 @@ goto :init
 	endif
 
 	touchDown 0 #menuCloseX #menuCloseY
-	sleep 50
+	sleep #btnDelay
 	touchUp 0
-	sleep 50
+	sleep #btnDelay
 	touchDown 0 #menuCloseX #menuCloseY
-	sleep 50
+	sleep #btnDelay
 	touchUp 0
 	sleep #menuSlideDelay
 	#time = #time + 200
 	
-	//click ads away if prem disabled
+	//collect ads
+	sleep 100
 	if #enablePremiumCollect == 0
-		sleep 250
 		touchDown 0 100 625
-		sleep 250
-		touchUp 0
-		sleep 250
+	else
+		touchDown 0 350 630
 	endif
+	sleep 100
+	touchUp 0
+	sleep 100
+	//end ads
 
 	#timeDiff = #secondsTotal - #lastPressStrike
 	if #timeDiff >= #intervalStrike and #intervalStrike > 0
@@ -471,17 +477,51 @@ goto :runActions
 	sleep #menuSlideDelay
 	#time = #time + #menuSlideDelay
 
-	//slide down
-	touchDown 1 280 740
-	sleep 200
-	touchMove 1 280 710
-	sleep 50
-	touchMove 1 280 500
-	sleep 50
-	touchMove 1 280 410
-	sleep 50
-	touchMove 1 280 400
-	touchUp 1
+	//slide down (recorded + optimized)
+	touchDown 0 202 747
+	sleep 17
+	touchMove 0 203 747
+	sleep 2
+	touchMove 0 203 746
+	sleep 4
+	touchMove 0 203 745
+	sleep 2
+	touchMove 0 203 744
+	sleep 4
+	touchMove 0 204 741
+	touchMove 0 205 737
+	sleep 3
+	touchMove 0 205 735
+	sleep 2
+	touchMove 0 207 725
+	sleep 4
+	touchMove 0 207 724
+	sleep 6
+	touchMove 0 224 556
+	sleep 4
+	touchMove 0 229 514
+	sleep 3
+	touchMove 0 230 501
+	sleep 3
+	touchMove 0 236 460
+	sleep 2
+	touchMove 0 237 454
+	sleep 2
+	touchMove 0 244 409
+	sleep 4
+	touchMove 0 249 381
+	sleep 2
+	touchMove 0 252 358
+	sleep 4
+	touchMove 0 260 304
+	sleep 3
+	touchMove 0 265 275
+	sleep 3
+	touchMove 0 270 248
+	sleep 4
+	touchMove 0 272 231
+	touchMove 0 0 0
+	touchUp 0
 
 	sleep 300
 	#time = #time + 650
@@ -628,7 +668,6 @@ goto :clanQuestClose
 		goto :start
 	endif
 
-
 	
 // ----------- LEVEL SKILLS
 :checkSkills
@@ -639,10 +678,6 @@ goto :clanQuestClose
 
 	if #skillsUnlocked == 5 and #justUnlockSkills == 1 and #maxOutHeavenlyStrike == 0
 		toast skills unlocked, stop now until next prestige
-		goto :checkSkillsFinish
-	endif
-	
-	if #skillsUnlocked == 5 and #justUnlockSkills == 1 and #skillCheckStepper == 2 and #maxOutHeavenlyStrike == 1
 		goto :checkSkillsFinish
 	endif
 
@@ -672,6 +707,8 @@ goto :clanQuestClose
 		
 		#time = #time + 400
 		goto :checkSkills
+	elseif #maxOutHeavenlyStrike == 1 and #skillCheckStepper == 2 and #lastSkillUnlocks == 5
+		goto :checkSkillsFinish
 	elseif #skillCheckStepper <= 8
 		goto :checkSkillsUnlock
 	elseif #skillCheckStepper <= 9
@@ -774,6 +811,7 @@ goto :checkSkillsSlideDown
 
 :checkSkillsFinish
 	#skillCheckStepper = 0
+	#lastSkillUnlocks = #skillsUnlocked
 	if #enableHeroes == 1
 		goto :runActions
 	endif
@@ -852,7 +890,10 @@ goto :levelHeroes
 
 	getColor #color1 475 510
 	if #color1 == #colorGray
-	
+		
+		//wait scroll out
+		sleep 400
+		
 		//slide 1 hero up
 		touchDown 1 325 740
 		touchMove 1 325 720
@@ -877,25 +918,60 @@ goto :levelHeroes
 		goto :closeMenu
 	endif
 	
-	touchDown 1 325 500
-	sleep 50
-	touchMove 1 325 510
-	touchMove 1 325 520
-	sleep 20
-	touchMove 1 325 550
-	touchMove 1 325 600
-	sleep 50
-	touchMove 1 325 790
-	touchMove 1 325 800
-	sleep 50
-	touchMove 1 325 835
-	touchMove 1 325 840
-	sleep 100
-	touchMove 1 325 845
-	touchMove 1 325 850
-	
-	touchUp 1
-	sleep 200
+	//slide top
+	touchDown 0 252 510
+	sleep 38
+	touchMove 0 252 511
+	sleep 3
+	touchMove 0 252 512
+	sleep 5
+	touchMove 0 252 515
+	sleep 4
+	touchMove 0 252 517
+	sleep 4
+	touchMove 0 252 521
+	sleep 5
+	touchMove 0 252 531
+	sleep 2
+	touchMove 0 252 535
+	sleep 3
+	touchMove 0 252 538
+	sleep 4
+	touchMove 0 251 545
+	sleep 2
+	touchMove 0 250 554
+	sleep 3
+	touchMove 0 248 567
+	sleep 2
+	touchMove 0 247 573
+	sleep 2
+	touchMove 0 245 583
+	sleep 2
+	touchMove 0 245 587
+	sleep 5
+	touchMove 0 222 733
+	sleep 2
+	touchMove 0 220 755
+	sleep 3
+	touchMove 0 220 770
+	sleep 2
+	touchMove 0 219 796
+	sleep 4
+	touchMove 0 219 811
+	sleep 2
+	touchMove 0 218 836
+	sleep 3
+	touchMove 0 218 854
+	sleep 2
+	touchMove 0 218 873
+	sleep 4
+	touchMove 0 216 953
+	sleep 2
+	touchMove 0 213 993
+	sleep 3
+	touchMove 0 0 0
+	touchUp 0
+	sleep 250
 	
 	#time = #time + 470
 	
