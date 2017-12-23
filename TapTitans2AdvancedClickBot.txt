@@ -1,4 +1,4 @@
-﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.5 dev 5 ]
+﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.6 dev 1 ]
 
 SCREEN_SIZE: 480x800
 
@@ -57,7 +57,7 @@ var #skillIntensity 2
 //; 2 = (default)
 //; 2-99 = Multiple level ups
 
-var #maxOutHero 2
+var #maxOutHero 1
 //; 1 = Damon (Mage)
 //; 2 = Nohni (Melee)
 //; 3 = Finn (Ranged)
@@ -630,7 +630,7 @@ goto :clanQuestClose
 
 
 	
-// ----------- CHECK SKILLS
+// ----------- LEVEL SKILLS
 :checkSkills
 
 	if #prestige == 0 and #startSkillCheckNow == 0
@@ -660,33 +660,89 @@ goto :clanQuestClose
 		#time = #time + #btnDelay
 		touchDown 0 466 650
 		sleep #btnDelay
-		#time = #time + #btnDelay
 		touchUp 0
+		sleep #btnDelay
+		touchDown 0 466 650
+		sleep #btnDelay
+		touchUp 0
+		sleep #btnDelay
+		touchDown 0 466 650
+		sleep #btnDelay
+		touchUp 0
+		
+		#time = #time + 400
 		goto :checkSkills
-	elseif #skillCheckStepper <= 6
+	elseif #skillCheckStepper <= 8
 		goto :checkSkillsUnlock
+	elseif #skillCheckStepper <= 9
+		goto :checkSkillsSlideUp
 	endif
-
-	//slide back
-	touchDown 1 280 650
-	sleep 200
-	touchMove 1 280 600
-	sleep 50
-	touchMove 1 280 700
-	sleep 50
-	touchMove 1 280 750
-	sleep 50
-	touchMove 1 280 780
-	touchUp 1
+	
 	#time = #time + 350
 goto :checkSkillsFinish
+
+:checkSkillsSlideUp
+	//slide back (recorded + optimized)
+	touchDown 0 252 510
+	sleep 38
+	touchMove 0 252 511
+	sleep 3
+	touchMove 0 252 512
+	sleep 5
+	touchMove 0 252 515
+	sleep 4
+	touchMove 0 252 517
+	sleep 4
+	touchMove 0 252 521
+	sleep 5
+	touchMove 0 252 531
+	sleep 2
+	touchMove 0 252 535
+	sleep 3
+	touchMove 0 252 538
+	sleep 4
+	touchMove 0 251 545
+	sleep 2
+	touchMove 0 250 554
+	sleep 3
+	touchMove 0 248 567
+	sleep 2
+	touchMove 0 247 573
+	sleep 2
+	touchMove 0 245 583
+	sleep 2
+	touchMove 0 245 587
+	sleep 5
+	touchMove 0 222 733
+	sleep 2
+	touchMove 0 220 755
+	sleep 3
+	touchMove 0 220 770
+	sleep 2
+	touchMove 0 219 796
+	sleep 4
+	touchMove 0 219 811
+	sleep 2
+	touchMove 0 218 836
+	sleep 3
+	touchMove 0 218 854
+	sleep 2
+	touchMove 0 218 873
+	sleep 4
+	touchMove 0 216 953
+	sleep 2
+	touchMove 0 213 993
+	sleep 3
+	touchMove 0 0 0
+	touchUp 0
+goto :checkSkills
 
 :checkSkillsUnlock
 	
 	sleep 200
 	#time = #time + 250
 	
-	getRGB #colorRed #colorGreen #colorBlue 450 710
+	getRGB #colorRed #colorGreen #colorBlue 450 660
 	
 	if #colorBlue == 2 or #colorBlue == 5
 		#skillsUnlocked = #skillsUnlocked + 1
@@ -694,7 +750,7 @@ goto :checkSkillsFinish
 	
 	if #colorBlue == 2
 		sleep 100
-		touchDown 0 466 730
+		touchDown 0 466 660
 		sleep 250
 		touchUp 0
 		sleep 200
@@ -973,17 +1029,59 @@ goto :levelHeroesSlideDownCollection
 	#time = #time + #menuSlideDelay
 	
 	//slide top
-	touchDown 0 280 650
-	sleep 200
-	touchMove 0 280 600
-	sleep 50
-	touchMove 0 280 700
-	sleep 50
-	touchMove 0 280 750
-	sleep 50
-	touchMove 0 280 780
+	touchDown 0 252 510
+	sleep 38
+	touchMove 0 252 511
+	sleep 3
+	touchMove 0 252 512
+	sleep 5
+	touchMove 0 252 515
+	sleep 4
+	touchMove 0 252 517
+	sleep 4
+	touchMove 0 252 521
+	sleep 5
+	touchMove 0 252 531
+	sleep 2
+	touchMove 0 252 535
+	sleep 3
+	touchMove 0 252 538
+	sleep 4
+	touchMove 0 251 545
+	sleep 2
+	touchMove 0 250 554
+	sleep 3
+	touchMove 0 248 567
+	sleep 2
+	touchMove 0 247 573
+	sleep 2
+	touchMove 0 245 583
+	sleep 2
+	touchMove 0 245 587
+	sleep 5
+	touchMove 0 222 733
+	sleep 2
+	touchMove 0 220 755
+	sleep 3
+	touchMove 0 220 770
+	sleep 2
+	touchMove 0 219 796
+	sleep 4
+	touchMove 0 219 811
+	sleep 2
+	touchMove 0 218 836
+	sleep 3
+	touchMove 0 218 854
+	sleep 2
+	touchMove 0 218 873
+	sleep 4
+	touchMove 0 216 953
+	sleep 2
+	touchMove 0 213 993
+	sleep 3
+	touchMove 0 0 0
 	touchUp 0
-	sleep 750
+	sleep 600
 	#time = #time + 1100
 	
 goto :levelUpLoop
