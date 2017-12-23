@@ -1,4 +1,4 @@
-﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.6 dev 2 ]
+﻿// -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.6 dev 3 ]
 
 SCREEN_SIZE: 480x800
 
@@ -72,9 +72,9 @@ var #mainHeroRoundTripLevelUps 5
 var #enableSkills 1
 
 //prevent sword master leveling after all skills are unlocked ( > lvl 600)
-var #stopMasterAfterSkillsUnlocked 1
+var #stopMasterAfterSkillsUnlocked 0
 
-//force max level on heavenly strike - option above is required
+//force max level on heavenly strike - option above must be disabled
 var #maxOutHeavenlyStrike 1
 
 //press given skills every X seconds
@@ -146,12 +146,13 @@ var #colorBlue 0
 var #colorGreen 0
 var #loopDetectionCount 0
 var #prestige 0
-var #skillsUnlocked 0
 var #tryWithDelay 0
 var #checkRunning 0
 var #clanQuestCount 0
 var #calc1 0
 var #recheckClanQuest 0
+var #skillsUnlocked 0
+var #lastSkillUnlocks 0
 
 // ----------- Delays
 var #btnDelay 150
@@ -446,6 +447,7 @@ goto :start
 		#skillsUnlocked = 0
 		goto :checkSkills
 	elseif #actionStepper == #orderLevelSkills and #enableSkills == 1 and  #skillsUnlocked == 5 and #maxOutHeavenlyStrike == 1
+		#skillsUnlocked = 0
 		goto :checkSkills
 	elseif #actionStepper == #orderLevelHeroes and #enableHeroes == 1
 		goto :levelHeroes
@@ -693,15 +695,15 @@ goto :clanQuestClose
 		// first skill
 		sleep #btnDelay
 		#time = #time + #btnDelay
-		touchDown 0 466 650
+		touchDown 0 466 680
 		sleep #btnDelay
 		touchUp 0
 		sleep #btnDelay
-		touchDown 0 466 650
+		touchDown 0 466 680
 		sleep #btnDelay
 		touchUp 0
 		sleep #btnDelay
-		touchDown 0 466 650
+		touchDown 0 466 680
 		sleep #btnDelay
 		touchUp 0
 		
@@ -709,9 +711,9 @@ goto :clanQuestClose
 		goto :checkSkills
 	elseif #maxOutHeavenlyStrike == 1 and #skillCheckStepper == 2 and #lastSkillUnlocks == 5
 		goto :checkSkillsFinish
-	elseif #skillCheckStepper <= 8
+	elseif #skillCheckStepper <= 7
 		goto :checkSkillsUnlock
-	elseif #skillCheckStepper <= 9
+	elseif #skillCheckStepper <= 8
 		goto :checkSkillsSlideUp
 	endif
 	
@@ -811,7 +813,17 @@ goto :checkSkillsSlideDown
 
 :checkSkillsFinish
 	#skillCheckStepper = 0
-	#lastSkillUnlocks = #skillsUnlocked
+		
+	if #lastSkillUnlocks < 5 and #skillsUnlocked == 5 and #justUnlockSkills == 1 and #maxOutHeavenlyStrike == 1
+		toast skills unlocked, just going for hs now
+	endif
+	
+	if #lastSkillUnlocks < 5
+		#lastSkillUnlocks = #skillsUnlocked
+	else
+		#skillsUnlocked = 5
+	endif
+	
 	if #enableHeroes == 1
 		goto :runActions
 	endif
@@ -864,6 +876,7 @@ goto :runActions
 	#time = #time + 2000
 	
 	if #tryWithDelay == 1
+	
 		sleep 3000
 	endif
 	
@@ -982,11 +995,11 @@ goto :levelHeroes
 	#loopDetectionCount = #loopDetectionCount + 1
 
 	if #maxOutHero == 1
-		touchDown 1 466 530
+		touchDown 1 466 549
 	elseif #maxOutHero == 2
-		touchDown 1 466 600
+		touchDown 1 466 624
 	elseif #maxOutHero == 3
-		touchDown 1 466 680
+		touchDown 1 466 701
 	endif		
 	
 	sleep 100
