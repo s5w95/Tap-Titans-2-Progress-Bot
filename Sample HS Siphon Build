@@ -1,6 +1,6 @@
 // -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.3 dev 1]
 // edited by djo5296 '17-12-30
-// chrisreyn Jan 15 2018
+// chrisreyn Jan 19 2018
 SCREEN_SIZE: 480x800
 
 // ----------- Click Areas
@@ -26,14 +26,14 @@ var #enableAutoprestige 1
 var #lateRun 0
 // use 1 if you want to start at later time defined below in #minz
 
-#minz = 60000 * 33
-// starts timer at 33 mins; else, edit the 33 above
+var #minz 0
+#minz = 60000 * 35
+// starts timer at 35 mins; else, edit the 35 above
 // "lateRun 1" to start at #minutes = #minz / 60000
 var #timeLateAdd 0
-var #minz 0
 #timeLateAdd = #minz
 
-var #prestigeAfterXMinutes 39
+var #prestigeAfterXMinutes 47
 // this script will always sleep for 3 minutes at one point
 // to wait for skills to cool down and be ready to level up to max
 
@@ -43,7 +43,9 @@ var #DelayCurrentRun 1
 // will always delay the next run and all runs after
 // ----------- Actions ----------- [ General ]
 //level ms, heroes, skills every x seconds
-var #runActionsEveryXSeconds 134
+var #runActionsEveryXSeconds 125
+// recommended equal to total SC+DShift duration minus ~9 second
+// do also note that displayed run time is not very accurate with real time
 
 var #runActionsOnStart 1
 //; 1 = (default) run actions on script start
@@ -87,13 +89,24 @@ if #lateRun == 1
 	#intervalHoM = 5
 	#intervalWC = 0
 	#intervalSC = 5
-	#unlocked = 4
+	#unlocked = 8
+	// use 8 if #minz minute equivalent > #maxSkillsAtXMinutes
+	// else, use 4
 endif
 
 //just level each skill once
 var #justUnlockSkills 1
 //; 1 = (default) just unlock
 //; 0 = level skills much as possible
+
+//only applicable when #justUnlockSkills == 1
+var #maxSkillsAtXMinutes 34
+
+// do not touch
+var #maxSkillsAtXMinutesA 0
+var #maxSkillsAtXMinutesB 0
+#maxSkillsAtXMinutesA = #maxSkillsAtXMinutes - 1
+#maxSkillsAtXMinutesB = #maxSkillsAtXMinutes + 2
 
 //run skill check after prestige (0) or now (1)
 var #startSkillCheckNow 1
@@ -231,9 +244,12 @@ var #resultClanQuest 0
 			if #minutes > 30
 				#intervalWC = 5
 			endif
-			if minutes > 34
+			if #minutes >= #maxSkillsAtXMinutesA
 				#intervalHS = 40
 				#runActionsEveryXSeconds = 60
+			endif
+			if #minutes >= 42
+				#intervalHS = 44
 			endif
 		endif
 	endif
@@ -422,7 +438,9 @@ goto :init
 			#time = #time + 200
 		endif
 		#timeDiff = #secondsTotal - #lastPressHS
-		if #timeDiff >= #intervalHS and #intervalHS > 0 and #colorRed == -1 and #colorBlue == 0
+		#sleepCount1 = #maxSkillsAtXMinutes - #minutes
+		// ^proxy variable
+		if #timeDiff >= #intervalHS and #intervalHS > 0 and #colorRed == -1 and #colorBlue == 0 and #sleepCount1 != 1
 			#lastPressHS = #secondsTotal
 			touchPress 0 40 710
 			#time = #time + 200
@@ -802,14 +820,15 @@ goto :closeMenu
 goto :checkSkillsFinish
 
 :lvlSkill
-	if #minutes > 34 and #unlocked < 8 and #skillCheckStepper <= 5
+	if #minutes >= #maxSkillsAtXMinutes and #unlocked < 8 and #skillCheckStepper <= 5
 		touchPress 0 459 755
 		sleep 300
 		#time = #time + 300
+		#unlocked = #unlocked + 1
 		if #skillCheckStepper == 3
-			toast Sleeping for 10 secs for HoM to cool down
-			sleep 10000
-			#time = #time + 10000
+			toast Sleeping for 7 secs for HoM to cool down
+			sleep 7000
+			#time = #time + 7000
 		endif
 	endif
 	
@@ -831,11 +850,10 @@ goto :checkSkillsFinish
 			elseif #unlocked >= 4
 			
 				//until when do you want to keep skills at lvl 1?
-				if #minutes < 34
+				if #minutes < #maxSkillsAtXMinutes
 					goto :endLvlSkill
 				else
 					if #unlocked < 8
-						#unlocked = #unlocked + 1
 						touchPress 0 459 755
 						sleep #btnDelay
 						#time = #time + #btnDelay
@@ -1012,7 +1030,7 @@ goto :closeMenu
 		sleep #runDelayInterval
 		#sleepSec = #display * 60 - #sleepCount2 * 10
 		toast Sleep time left: #sleepSec seconds
-		if #sleepSec > 220
+		if #sleepSec > 145
 			touchPress 0 430 710
 			touchPress 0 200 710
 			touchPress 0 40 710
@@ -1165,6 +1183,11 @@ goto :closeMenu
 	
 		#loopDetectionCount = 0
 		#time = #time + 2000
+		
+		if #minutes > 39
+			goto :lvlTopHero
+		endif
+		
 		//scroll up
 		touchDown 0 280 650
 		sleep 200
@@ -1263,12 +1286,12 @@ goto :scrollTop
 	
 	//skip leveling other heroes at these times
 	
-	if #minutes > 36
+	if #minutes >= #maxSkillsAtXMinutesB or #unlocked >= 8
 		#actionStepper = #actionStepper + 1
 	endif
 	
-	if #minutes >= 70
-		goto :closeMenu
+	if #minutes >= 40
+		goto :levelHeroesPressLevelUp
 	endif
 	
 	//lvl up only nearby heroes at this time onwards
@@ -1620,7 +1643,7 @@ goto :pressSkills
 		touchUp 0
 	endif
 	
-	if #hitCount == 10 and #agree == 1
+	if #hitCount > 9 and #agree == 1
 		#hitCount = 0
 		touchDown 0 300 630
 		touchUp 0
@@ -1628,13 +1651,13 @@ goto :pressSkills
 		touchUp 0
 	endif
 	
-	if #hitCount == 10 and #decline == 1
+	if #hitCount > 9 and #decline == 1
 		#hitCount = 0
 		touchDown 0 200 630
 		touchUp 0
 	endif	
 	
-	sleep #hitDelay
+	sleep 35
 	#time = #time + #hitDelay
 	
 	if #agree == 1 or #decline == 1
