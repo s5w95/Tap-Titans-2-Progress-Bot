@@ -1,6 +1,6 @@
 // -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.3 dev 1]
 // edited by djo5296 '17-12-30
-// chrisreyn Jan 19 2018
+// chrisreyn HS SIPHON Jan 21 2018
 SCREEN_SIZE: 480x800
 
 // ----------- Click Areas
@@ -25,17 +25,13 @@ var #enableAutoprestige 1
 
 var #lateRun 0
 // use 1 if you want to start at later time defined below in #minz
+// 2nd run onwards will NOT adjust time by #minz
 
-var #minz 0
-#minz = 60000 * 35
+calc #minz 60000 * 35
 // starts timer at 35 mins; else, edit the 35 above
 // "lateRun 1" to start at #minutes = #minz / 60000
-var #timeLateAdd 0
-#timeLateAdd = #minz
 
 var #prestigeAfterXMinutes 47
-// this script will always sleep for 3 minutes at one point
-// to wait for skills to cool down and be ready to level up to max
 
 var #DelayCurrentRun 1
 // each run is delayed by 0-10 mins at random to prevent teapot
@@ -43,7 +39,7 @@ var #DelayCurrentRun 1
 // will always delay the next run and all runs after
 // ----------- Actions ----------- [ General ]
 //level ms, heroes, skills every x seconds
-var #runActionsEveryXSeconds 125
+var #runActionsEveryXSeconds 135
 // recommended equal to total SC+DShift duration minus ~9 second
 // do also note that displayed run time is not very accurate with real time
 
@@ -72,7 +68,6 @@ var #fullManaSkill 1
 //; 6 = SC
 
 //press given skills every X seconds
-//check :afterPrestige and copy VALUES!
 var #intervalHS 5
 var #intervalDS 0
 var #intervalFS 0
@@ -80,8 +75,8 @@ var #intervalHoM 5
 var #intervalWC 0
 var #intervalSC 5
 
-//these will be the skill intervals when trying to resume a run
-//keep in mind the dynamic skill intervals you set in :start
+//these will be the skill intervals when #lateRun == 1
+//time dependent variable changes in :start will still apply, be sure to check :start section
 if #lateRun == 1
 	#intervalHS = 5
 	#intervalDS = 0
@@ -98,15 +93,15 @@ endif
 var #justUnlockSkills 1
 //; 1 = (default) just unlock
 //; 0 = level skills much as possible
+//; will always max HS and SC whether 1 or 0
 
 //only applicable when #justUnlockSkills == 1
 var #maxSkillsAtXMinutes 34
+var #phantomTimepiece 1
 
-// do not touch
-var #maxSkillsAtXMinutesA 0
-var #maxSkillsAtXMinutesB 0
-#maxSkillsAtXMinutesA = #maxSkillsAtXMinutes - 1
-#maxSkillsAtXMinutesB = #maxSkillsAtXMinutes + 2
+// extra variables I use in my code
+calc #maxSkillsAtXMinutesA #maxSkillsAtXMinutes - 1
+calc #maxSkillsAtXMinutesB #maxSkillsAtXMinutes + 2
 
 //run skill check after prestige (0) or now (1)
 var #startSkillCheckNow 1
@@ -169,6 +164,15 @@ var #sleepCount1 0
 var #sleepCount2 0
 var #display
 rand #display 0 10
+set #rAEXS #runActionsEveryXSeconds
+set #iHS #intervalHS
+set #iDS #intervalDS
+set #iFS #intervalFS
+set #iHoM #intervalHoM
+set #iWC #intervalWC
+set #iSC #intervalSC
+var #HoMCD1 6000
+var #HoMCD2 41000
 // ----------- Delays
 var #btnDelay 150
 var #hitDelay 40
@@ -249,7 +253,7 @@ var #resultClanQuest 0
 				#runActionsEveryXSeconds = 60
 			endif
 			if #minutes >= 42
-				#intervalHS = 44
+				#intervalHS = 45
 			endif
 		endif
 	endif
@@ -299,26 +303,18 @@ var #resultClanQuest 0
 :end
 
 :afterPrestige
-	if #DelayCurrentRun == 0
-		#DelayCurrentRun = 1
-	endif
+	#DelayCurrentRun = 1
 	#skillsUnlocked = 0
 	#time = 0
-	#seconds = 0
-	#secondsTotal = 0
-	#minutes = 0
 	#unlocked = 0
-	#justUnlockSkills 1
-	#runActionsEveryXSeconds = 187
+	#runActionsEveryXSeconds = #rAEXS
 	
-	#intervalHS = 5
-	#intervalDS = 0
-	#intervalFS = 0
-	#intervalHoM = 5
-	#intervalWC = 0
-	#intervalSC = 5
-	
-	#fullManaSkill = 1
+	#intervalHS = #iHS
+	#intervalDS = #iDS
+	#intervalFS = #iFS
+	#intervalHoM = #iHoM
+	#intervalWC = #iWC
+	#intervalSC = #iSC
 goto :init
 // ----------- INIT
 
@@ -440,10 +436,12 @@ goto :init
 		#timeDiff = #secondsTotal - #lastPressHS
 		#sleepCount1 = #maxSkillsAtXMinutes - #minutes
 		// ^proxy variable
-		if #timeDiff >= #intervalHS and #intervalHS > 0 and #colorRed == -1 and #colorBlue == 0 and #sleepCount1 != 1
-			#lastPressHS = #secondsTotal
-			touchPress 0 40 710
-			#time = #time + 200
+		if #timeDiff >= #intervalHS and #intervalHS > 0 and #colorRed == -1 and #colorBlue == 0
+			if #sleepCount1 >= 1 or #sleepCount1 <= 0
+				#lastPressHS = #secondsTotal
+				touchPress 0 40 710
+				#time = #time + 200
+			endif
 		endif
 	endif
 
@@ -825,10 +823,14 @@ goto :checkSkillsFinish
 		sleep 300
 		#time = #time + 300
 		#unlocked = #unlocked + 1
-		if #skillCheckStepper == 3
-			toast Sleeping for 7 secs for HoM to cool down
-			sleep 7000
-			#time = #time + 7000
+		if #skillCheckStepper == 3 and #phantomTimepiece == 1
+			toast Sleeping for 6 secs for HoM to cool down
+			sleep #HoMCD1
+			#time = #time + #HoMCD1
+		elseif #skillCheckStepper == 3 and #phantomTimepiece == 0
+			toast Sleeping for 41 secs for HoM to cool down
+			sleep #HoMCD2
+			#time = #time + #HoMCD2
 		endif
 	endif
 	
@@ -1046,12 +1048,13 @@ goto :closeMenu
 // ----------- LEVEL HEROES
 :levelHeroes
 	if #count < 2
-			if #lateRun == 1 and #count == 0
-				#time = #time + #timeLateAdd
-				#seconds = (#time/1000)%60
-				#secondsTotal = #time/1000
-				#minutes = (#time/1000)/60
-			endif
+		if #lateRun == 1 and #count == 0
+			#time = #time + #minz
+			#lateRun = 0
+			#seconds = (#time/1000)%60
+			#secondsTotal = #time/1000
+			#minutes = (#time/1000)/60
+		endif
 		if #count < 2 and #lateRun == 0
 			sleep 100
 			//open stats
@@ -1290,7 +1293,7 @@ goto :scrollTop
 		#actionStepper = #actionStepper + 1
 	endif
 	
-	if #minutes >= 40
+	if #minutes > 39
 		goto :levelHeroesPressLevelUp
 	endif
 	
