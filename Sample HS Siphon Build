@@ -1,6 +1,6 @@
 // -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.3 dev 1]
 // edited by djo5296 '17-12-30
-// chrisreyn HS SIPHON Jan 21 2018
+// chrisreyn HS SIPHON Jan 23 2018
 SCREEN_SIZE: 480x800
 
 // ----------- Click Areas
@@ -15,13 +15,12 @@ var #enableClanShip 0
 
 var #enableTapping 1
 //; 1 = (default) hit the titans with your sword master
-//; 0 = disable hits (except on CQ), no fairies will clicked at all
+//; 0 = disable hits (except on CQ)
 
 var #equipStack 1
 // 1 = keep clan crates and equips on the floor
 // ----------- Actions ----------- [ Prestige ]
 var #enableAutoprestige 1
-// 1 for on, 0 for don't prestige
 
 var #lateRun 0
 // use 1 if you want to start at later time defined below in #minz
@@ -35,12 +34,11 @@ var #prestigeAfterXMinutes 47
 
 var #DelayCurrentRun 1
 // each run is delayed by 0-10 mins at random to prevent teapot
-// set as 1 to delay current run, 0 if not
 // will always delay the next run and all runs after
 // ----------- Actions ----------- [ General ]
 //level ms, heroes, skills every x seconds
-var #runActionsEveryXSeconds 135
-// recommended equal to total SC+DShift duration minus ~9 second
+var #runActionsEveryXSeconds 139
+// recommended equal to total SC+DShift duration minus ~6 seconds
 // do also note that displayed run time is not very accurate with real time
 
 var #runActionsOnStart 1
@@ -239,6 +237,9 @@ var #resultClanQuest 0
 		
 		if #enableSkills == 1
 //time dynamic skill interval clicks
+			if #minutes >= 14
+				#runActionsEveryXSeconds = #rAEXS + 10
+			endif
 			if #minutes > 20
 				#intervalFS = 5
 			endif
@@ -306,6 +307,9 @@ var #resultClanQuest 0
 	#DelayCurrentRun = 1
 	#skillsUnlocked = 0
 	#time = 0
+	#seconds = 0
+	#secondsTotal = 0
+	#minutes = 0
 	#unlocked = 0
 	#runActionsEveryXSeconds = #rAEXS
 	
@@ -358,6 +362,7 @@ goto :init
 	#time = #time + #menuSlideDelay
 	
 	if #runActionsOnStart == 1
+		#actionStepper = 0
 		goto :runActions
 	endif
 goto :start
@@ -452,7 +457,6 @@ goto :start
 	//checking mana bar
 	getColor #color1 208 638
 	if #color1 == #colorWhite
-		//Mana full starting something and dont waste regen time
 		goto :startSkill
 	endif
 goto :start
@@ -622,7 +626,7 @@ goto :runActions
 		touchDown 0 330 535
 		sleep #btnDelay
 		touchUp 0
-		sleep 10000
+		sleep 12000
 		#count = 0
 		goto :afterPrestige
 	else
