@@ -1,6 +1,6 @@
 // -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.3 dev 1]
 // edited by djo5296 '17-12-30
-// chrisreyn HS SIPHON Feb 24 2018
+// chrisreyn HS SIPHON April 7 2018
 // thanks to tommy8208 for testing
 SCREEN_SIZE: 480x800
 
@@ -65,7 +65,7 @@ var #fullManaSkill 1
 // 6 = SC
 
 //press given skills every X seconds
-var #intervalHS 5
+var #intervalHS 9
 var #intervalDS 0
 var #intervalFS 0
 var #intervalHoM 5
@@ -233,22 +233,21 @@ var #resultClanQuest 0
 				#intervalWC = 5
 			endif
 			if #minutes > 30
-				#intervalHS = 10
+				#intervalHS = 25
 				#runActionsEveryXSeconds = 90
 			endif
 			if #minutes >= #maxSkillsAtXMinutesA
-				#intervalHS = 15
+				#intervalHS = 29
 				//#intervalDS = 0
 				#intervalWC = 0
 				#runActionsEveryXSeconds = 80
 			endif
 			if #minutes >= 39
-				#intervalHS = 35
 				#intervalWC = 5
 				#runActionsEveryXSeconds = 60
 			endif
-				if #minutes >= 55
-				#intervalHS = 45
+			if #minutes >= 45
+				#intervalHS = 44
 			endif
 			//if #minutes >= 65
 				//#intervalHS = 50
@@ -388,26 +387,36 @@ goto :init
 		#time = #time + 4 * #shipDelay
 	endif
 	
+	//click "Fight Boss"
 	getColor #color 390 36
 	if #color == 1204718
-		touchPress 0 390 36
+		touchDown 0 390 36
+		sleep 21
+		touchUp
+		sleep 21
+		#time = #time + 42
 	endif
+	
 	#timeDiff = #secondsTotal - #lastPressSC
 	if #timeDiff >= #intervalSC and #intervalSC > 0
 		#lastPressSC = #secondsTotal
 		touchPress 0 430 710
+		touchPress 0 430 710
 		#time = #time + 200
 	endif
+	
 	getRGB #colorRed #colorGreen #colorBlue 410 705
 	//if #minutes >= 50
 		//#colorRed = -1
 		//#colorBlue = 0
 	//endif
 	#time = #time + 100
+	
 	if #colorRed == -1 and #colorBlue == 0
 		#timeDiff = #secondsTotal - #lastPressHoM
 		if #timeDiff >= #intervalHoM and #intervalHoM > 0 and #colorRed == -1 and #colorBlue == 0
 			#lastPressHoM = #secondsTotal
+			touchPress 0 200 710
 			touchPress 0 200 710
 			#time = #time + 200
 		endif
@@ -415,17 +424,20 @@ goto :init
 		if #timeDiff >= #intervalDS and #intervalDS > 0 and #colorRed == -1 and #colorBlue == 0
 			#lastPressDS = #secondsTotal
 			touchPress 0 120 710
+			touchPress 0 120 710
 			#time = #time + 200
 		endif
 		#timeDiff = #secondsTotal - #lastPressWC
 		if #timeDiff >= #intervalWC and #intervalWC > 0 and #colorRed == -1 and #colorBlue == 0
 			#lastPressWC = #secondsTotal
 			touchPress 0 360 710
+			touchPress 0 360 710
 			#time = #time + 200
 		endif
 		#timeDiff = #secondsTotal - #lastPressFS
 		if #timeDiff >= #intervalFS and #intervalFS > 0 and #colorRed == -1 and #colorBlue == 0
 			#lastPressFS = #secondsTotal
+			touchPress 0 280 710
 			touchPress 0 280 710
 			#time = #time + 200
 		endif
@@ -435,6 +447,7 @@ goto :init
 		if #timeDiff >= #intervalHS and #intervalHS > 0 and #colorRed == -1 and #colorBlue == 0
 			if #sleepCount1 >= 1 or #sleepCount1 <= 0
 				#lastPressHS = #secondsTotal
+				touchPress 0 40 710
 				touchPress 0 40 710
 				#time = #time + 200
 			endif
@@ -855,7 +868,7 @@ goto :checkSkillsFinish
 			endif
 		endif
 		
-	elseif #justUnlockSkills == 0
+	elseif #justUnlockSkills == 0		
 		getRGB #colorRed #colorGreen #colorBlue 459 755
 		if #colorBlue <= -45
 			touchPress 0 459 755
@@ -1266,6 +1279,11 @@ goto :scrollTop
 	//skip leveling other heroes at these times
 	
 	if #unlocked >= 8
+		#actionStepper = #actionStepper + 1
+		//since skills have been maxed, it wont level them up anymore
+	endif
+	
+	if #justUnlockSkills == 0 and #minutes >= 11
 		#actionStepper = #actionStepper + 1
 		//since skills have been maxed, it wont level them up anymore
 	endif
