@@ -340,6 +340,16 @@ goto :init
 // ---------- PRESS SKILLS
 
 :pressSkills
+	//click "Fight Boss"
+	getColor #color 372 24
+	if #color == 1076975
+		toast FightBoss1
+		touchPress 0 390 36
+		sleep #btnDelay
+		#time = #time + #btnDelay
+		goto :pressSkills
+	endif
+	
 	touchDown 0 #menuCloseX #menuCloseY
 	sleep 50
 	touchUp 0
@@ -356,25 +366,6 @@ goto :init
 		touchPress 0 65 100
 		sleep #shipDelay
 		#time = #time + 4 * #shipDelay
-	endif
-	
-	//click "Fight Boss"
-	getColor #color 372 24
-	if #color == 1076975
-		toast FightBoss1
-		touchDown 0 390 36
-		sleep #btnDelay
-		touchUp
-		sleep #btnDelay
-		touchDown 0 390 36
-		sleep #btnDelay
-		touchUp
-		sleep #btnDelay
-		touchDown 0 390 36
-		sleep #btnDelay
-		touchUp
-		sleep #btnDelay
-		#time = #time + #btnDelay * 3
 	endif
 	
 	#timeDiff = #secondsTotal - #lastPressSC
@@ -926,13 +917,20 @@ goto :endLvlSkill
 	#time = #time + 50
 	
 	if #skillCheckStepper == 1
+		toast HS color #skillAvailable
 		if #skillAvailable >= -7963574 and #skillAvailable <= -7034609
 			#loopBreak = 0
 			goto :checkSkills
 		endif
-		touchDown 0 460 691
-		sleep #btnDelay
-		#time = #time + #btnDelay
+		touchPress 0 405 680
+		sleep 34
+		touchPress 0 405 680
+		touchPress 0 405 680
+		touchPress 0 405 680
+		sleep 45
+		touchPress 0 405 680
+		sleep 38
+		#time = #time + 115
 		
 	elseif #skillCheckStepper > 1
 		toast SCS is #skillCheckStepper, R #colorRed, G #colorGreen, B #colorBlue
@@ -940,7 +938,15 @@ goto :endLvlSkill
 			#loopBreak = 0
 			goto :endLvlSkill
 		endif
-		touchPress 0 459 755
+		touchPress 0 415 750
+		sleep 34
+		touchPress 0 415 750
+		touchPress 0 415 750
+		touchPress 0 415 750
+		sleep 45
+		touchPress 0 415 750
+		sleep 38
+		#time = #time + 115
 	endif
 		
 	sleep 100
