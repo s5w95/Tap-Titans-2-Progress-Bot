@@ -1,6 +1,6 @@
 // -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.3 dev 1]
 // edited by djo5296 '17-12-30
-// chrisreyn HS SIPHON April 8 2018
+// chrisreyn HS SIPHON April 9 2018
 // thanks to tommy8208 for testing
 SCREEN_SIZE: 480x800
 
@@ -27,13 +27,9 @@ var #lateRun 0
 // if #lateRun > 0, will resume run at #minutes = #lateRun
 // 2nd run onwards will NOT adjust time
 
-var #prestigeAfterXMinutes 0
-//leave as 0, what matters are the start and end times below
-
-var #prestigeStartTime 40
-var #prestigeEndTime 50
-
-rand #prestigeAfterXMinutes #prestigeStartTime #prestigeEndTime
+var #prestigeStartTime 35
+// input minimum time in minutes before prestige
+// prestigeEndTime is ALWAYS 10 more minutes greater than StartTime to prevent teapot
 // ---------- Actions ---------- [ General ]
 var #runActionsEveryXSeconds 94
 // recommended equal to total SC+ED+DShift duration minus ~6 or 7 seconds
@@ -158,6 +154,9 @@ set #iHoM #intervalHoM
 set #iWC #intervalWC
 set #iSC #intervalSC
 calc #minz #lateRun * 60000
+var #prestigeAfterXMinutes 0
+calc #prestigeEndTime #prestigeStartTime + 10
+rand #prestigeAfterXMinutes #prestigeStartTime #prestigeEndTime
 // ---------- Delays
 var #btnDelay 150
 var #hitDelay 40
@@ -809,9 +808,6 @@ goto :closeMenu
 	#skillCheckStepper = #skillCheckStepper + 1
 	
 	if #skillCheckStepper == 1 or #skillCheckStepper == 6
-		sleep #btnDelay
-		#time = #time + #btnDelay
-		touchUp 0
 		goto :maxSkill
 		
 	elseif #skillCheckStepper < 6
@@ -881,8 +877,8 @@ goto :endLvlSkill
 	endif
 	
 :maxSkill
-	sleep 200
-	#time = #time + 200
+	sleep 70
+	#time = #time + 70
 	
 	#loopBreak = #loopBreak + 1
 
@@ -916,24 +912,7 @@ goto :endLvlSkill
 	sleep 50
 	#time = #time + 50
 	
-	if #skillCheckStepper == 1
-		toast HS color #skillAvailable
-		if #skillAvailable >= -7963574 and #skillAvailable <= -7034609
-			#loopBreak = 0
-			goto :checkSkills
-		endif
-		touchPress 0 405 680
-		sleep 34
-		touchPress 0 405 680
-		touchPress 0 405 680
-		touchPress 0 405 680
-		sleep 45
-		touchPress 0 405 680
-		sleep 38
-		#time = #time + 115
-		
-	elseif #skillCheckStepper > 1
-		toast SCS is #skillCheckStepper, R #colorRed, G #colorGreen, B #colorBlue
+	if #skillCheckStepper >= 2
 		if #colorRed < -100 or #colorGreen < -100 or #colorBlue <= -40
 			#loopBreak = 0
 			goto :endLvlSkill
@@ -947,6 +926,23 @@ goto :endLvlSkill
 		touchPress 0 415 750
 		sleep 38
 		#time = #time + 115
+	endif
+	
+	if #skillCheckStepper <= 1
+		if #skillAvailable >= -7963574 and #skillAvailable <= -7034609
+			#loopBreak = 0
+			goto :checkSkills
+		endif
+		touchPress 0 405 680
+		sleep 34
+		touchPress 0 405 680
+		touchPress 0 405 680
+		touchPress 0 405 680
+		sleep 45
+		touchPress 0 405 680
+		sleep 38
+		#time = #time + 115
+	
 	endif
 		
 	sleep 100
@@ -1022,6 +1018,7 @@ goto :closeMenu
 			sleep #btnDelay
 			#time = #time + #btnDelay
 			touchUp 0
+			sleep 20
 				
 			//wait for slide
 			sleep #menuSlideDelay
@@ -1037,6 +1034,7 @@ goto :closeMenu
 			touchMove 0 280 750
 			sleep 50
 			touchMove 0 280 780
+			sleep 50
 			touchUp 0
 			sleep 750
 		
@@ -1050,6 +1048,7 @@ goto :closeMenu
 			touchMove 0 280 750
 			sleep 50
 			touchMove 0 280 780
+			sleep 50
 			touchUp 0
 			sleep 750
 		
@@ -1063,10 +1062,11 @@ goto :closeMenu
 			touchMove 0 280 750
 			sleep 50
 			touchMove 0 280 780
+			sleep 50
 			touchUp 0
 			sleep 750
 			sleep #btnDelay
-			#time = #time + #btnDelay + 3300
+			#time = #time + #btnDelay + 3450
 			
 			touchDown 0 466 580
 			sleep 50
