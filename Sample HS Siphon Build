@@ -1,6 +1,6 @@
 // -  Tap Titans 2 AdvancedClickBot by Tune389 [ v1.3 dev 1]
 // edited by djo5296 '17-12-30
-// chrisreyn HS SIPHON April 9 2018
+// chrisreyn HS SIPHON April 10 2018
 // thanks to tommy8208 for testing
 SCREEN_SIZE: 480x800
 
@@ -61,7 +61,7 @@ var #fullManaSkill 1
 // 6 = SC
 
 //press given skills every X seconds
-var #intervalHS 14
+var #intervalHS 17
 var #intervalDS 5
 var #intervalFS 5
 var #intervalHoM 5
@@ -632,6 +632,29 @@ goto :start
 
 // ---------- CHECK CLAN QUEST
 :checkClanQuest
+	sleep 300
+	
+	if #agree == 1
+		touchDown 0 300 630
+		sleep 25
+		touchUp 0
+		sleep 25
+		touchDown 0 300 630
+		sleep 25
+		touchUp 0
+		sleep 25
+	endif
+	
+	if #decline == 1
+		touchDown 0 200 630
+		sleep 25
+		touchUp 0
+		sleep 25
+		touchDown 0 200 630
+		sleep 25
+		touchUp 0
+		sleep 25
+	endif
 	getRGB #colorRed #colorGreen #colorBlue 72 21
 	//getColor #color1 65 795
 	
@@ -1133,12 +1156,15 @@ goto :closeMenu
 	endif
 	
 	if #decline == 1
-		touchDown 0 195 630
+		touchDown 0 200 630
+		sleep 25
 		touchUp 0
-		touchDown 0 195 630
+		sleep 25
+		touchDown 0 200 630
+		sleep 25
 		touchUp 0
-		touchDown 0 195 630
-		touchUp 0
+		sleep 25
+		#time = #time + 100
 	endif
 	
 	//open menu
@@ -1628,6 +1654,7 @@ goto :pressSkills
 	endif
 	
 	if #hitCount > 9 and #agree == 1
+		#hitCount = 0
 		touchDown 0 300 630
 		sleep 25
 		touchUp 0
@@ -1636,17 +1663,20 @@ goto :pressSkills
 		sleep 25
 		touchUp 0
 		sleep 25
-		touchDown 0 300 630
-		sleep 25
-		touchUp 0
-		sleep 25
-		#time = #time + 150
+		#time = #time + 100
 	endif
 	
 	if #hitCount > 9 and #decline == 1
 		#hitCount = 0
 		touchDown 0 200 630
+		sleep 25
 		touchUp 0
+		sleep 25
+		touchDown 0 200 630
+		sleep 25
+		touchUp 0
+		sleep 25
+		#time = #time + 100
 	endif	
 	
 	sleep 35
